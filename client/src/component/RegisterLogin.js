@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
 	NotificationContainer,
@@ -6,16 +6,14 @@ import {
 } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
-export default function RegisterForm(props) {
+export default function RegisterLogin(props) {
 	const [users, setUsers] = useState({
-		firstname: "",
-		lastname: "",
 		email: "",
 		password: "",
-		passwordConfirm: "",
 	});
 
 	const handleChange = (e) => {
@@ -28,10 +26,9 @@ export default function RegisterForm(props) {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		axios
-			.post("/auth/register", users)
+			.post("/auth/login", users)
 			.then((res) => {
 				console.log(res.data);
-				console.log(res.data.cookie);
 				if (res.data.success == true) {
 					NotificationManager.success(
 						`Inscription reussi`,
@@ -60,33 +57,11 @@ export default function RegisterForm(props) {
 					style={{ justifyContent: "center" }}
 					id="contained-modal-title-vcenter"
 				>
-					Register To Matchandate
+					Login
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form className="registerform" onSubmit={handleSubmit}>
-					<Form.Group controlId="firstname">
-						<Form.Label htmlFor="firstname">First Name</Form.Label>
-						<Form.Control
-							type="text"
-							name="firstname"
-							onChange={handleChange}
-							placeholder="Enter email"
-							value={users.firstname}
-						/>
-						<Form.Text className="text-muted">any error</Form.Text>
-					</Form.Group>
-					<Form.Group controlId="lastname">
-						<Form.Label htmlFor="lastname">Last Name</Form.Label>
-						<Form.Control
-							type="text"
-							name="lastname"
-							onChange={handleChange}
-							placeholder="Enter email"
-							value={users.lastname}
-						/>
-						<Form.Text className="text-muted">any error</Form.Text>
-					</Form.Group>
 					<Form.Group controlId="email">
 						<Form.Label htmlFor="email">Email</Form.Label>
 						<Form.Control
@@ -104,19 +79,8 @@ export default function RegisterForm(props) {
 							type="password"
 							name="password"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Enter password"
 							value={users.password}
-						/>
-						<Form.Text className="text-muted">any error</Form.Text>
-					</Form.Group>
-					<Form.Group controlId="passwordConfirm">
-						<Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
-						<Form.Control
-							type="password"
-							name="passwordConfirm"
-							onChange={handleChange}
-							placeholder="Enter email"
-							value={users.passwordConfirm}
 						/>
 						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
@@ -126,7 +90,7 @@ export default function RegisterForm(props) {
 				</Form>
 			</Modal.Body>
 			<Modal.Footer style={{ justifyContent: "center" }}>
-				<p>Already hav account ? Login Here</p>
+				<p>Not have account yet ? Register Here</p>
 			</Modal.Footer>
 		</Modal>
 	);
