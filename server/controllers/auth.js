@@ -1,72 +1,54 @@
 const connection = require("../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto")
+const { validationResult } = require('express-validator');
+const sendmail = require('../utils/sendMail')
 
-exports.login = async (req, res) => {
-	try {
-		const { email, password } = req.body;
-
-		if (!email || !password) {
-			return res.json({
-				success: false,
-				error: "EMPTY_DATA",
-				message: "Please provide an email and password",
-			});
-		}
-		connection.query(
-			"SELECT * FROM user WHERE email = ?",
-			[email],
-			async (error, results) => {
-				if (!results[0] || !(await bcrypt.compare(password, results[0].password))) {
-					console.log(password)
-					console.log(results[0].password)
-					res.json({
-						success: false,
-						error: "EMAIL_OR_PASSWORD_IS_INVALID",
-						message: "Email or Password is incorrect",
-					});
-				} else {
-					console.log(results);
-					const id = results[0].id;
-
-					const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-						expiresIn: process.env.JWT_EXPIRES_IN,
-					});
-
-					console.log("The JWT token is : " + token);
-
-					const cookieOptions = {
-						expires: new Date(
-							Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-						),
-						httpOnly: true,
-					};
-					res.cookie("jwt", token, cookieOptions);
-					if (error) {
-						console.error(error);
-					} else {
-						res.json({
-							success: true,
-							message: "User Login success",
-						});
-					}
-				}
-			}
-		);
-	} catch (error) {
-		console.error(error);
+exports.login = (req, res) => {
+	const { email, password } = req.body;
+	const errorFormatter = ({ msg }) => { return `${msg}`};
+	var error_result = validationResult(req).formatWith(errorFormatter);
+	if(!error_result.isEmpty()){
+		console.log(error_result)
+		return res.json({ 
+			success: false,
+			error: error_result.array(),
+			message: error_result
+		});
 	}
-};
+	connection.query("SELECT * FROM user WHERE email = ?", [email], (error, results) => {
+		if(!results[0]){
+			res.json({
+				success: false,
+				error: "EMAIL_DSNT_EXIST",
+				message: "Email does not exist"
+			})
+		}
+		bcrypt.compare(password, results[0].password, function(err, res) {
+			if (err){
+				
+			}
+			if (res){
+			} else {
+			}
+		})
+	})
+}
 
 exports.register = (req, res) => {
 	const today = Date.now();
+	const activate_token = crypto.randomBytes(64).toString('hex');
 	const { firstname, lastname, email, password, passwordConfirm } = req.body;
+	const errorFormatter = ({ msg }) => { return `${msg}`};
+	var error_result = validationResult(req).formatWith(errorFormatter);
 
-	if (Object.keys(req.body).length === 0) {
-		res.json({
+	if(!error_result.isEmpty()){
+		console.log(error_result)
+		return res.json({ 
 			success: false,
-			error: "FIELDS_ARE_REQUIRED",
-			message: "Please all fields are required",
+			error: error_result.array(),
+			message: error_result
 		});
 	}
 	connection.query(
@@ -86,7 +68,7 @@ exports.register = (req, res) => {
 				return res.json({
 					success: false,
 					error: "PASSWORD_NOT_MATCH",
-					message: "password Do not match",
+					message: "password do not match",
 				});
 			}
 			bcrypt.hash(password, 10, function (err, hash) {
@@ -98,12 +80,14 @@ exports.register = (req, res) => {
 						email: email,
 						password: hash,
 						created: today,
+						activate_token: activate_token
 					},
 					(error, results) => {
 						if (error) {
 							console.error(error);
 						} else {
 							console.log(results);
+							sendmail(email, "Activation de compte", activate_token)
 							res.json({
 								success: true,
 								message: "User Registered",

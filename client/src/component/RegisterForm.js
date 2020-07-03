@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, setState } from "react";
 import axios from "axios";
-import {
-	NotificationContainer,
-	NotificationManager,
-} from "react-notifications";
+import {NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 export default function RegisterForm(props) {
+	const [modal, setModal] = useState()
 	const [users, setUsers] = useState({
 		firstname: "",
 		lastname: "",
@@ -31,15 +29,12 @@ export default function RegisterForm(props) {
 			.post("/auth/register", users)
 			.then((res) => {
 				console.log(res.data);
-				console.log(res.data.cookie);
 				if (res.data.success == true) {
-					NotificationManager.success(
-						`Inscription reussi`,
-						`Bienvenu ${users.firstname}`
-					);
-					window.location = "/profile/mine";
+					NotificationManager.success(`Un email a ete envoye sur ${users.email}`, `Inscription reussi ${users.firstname}`);
+				} else if (res.data.error === "ALREADY_ACTIVE"){
+					NotificationManager.error(`Compte deja actif`, "Error");
 				} else {
-					NotificationManager.error("Error", `${res.data.error}`);
+					NotificationManager.error('Wrong Token', "Error")
 				}
 			})
 			.catch((error) => {

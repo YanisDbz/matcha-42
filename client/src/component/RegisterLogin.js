@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-	NotificationContainer,
-	NotificationManager,
-} from "react-notifications";
+import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -29,11 +25,8 @@ export default function RegisterLogin(props) {
 			.post("/auth/login", users)
 			.then((res) => {
 				console.log(res.data);
-				if (res.data.success == true) {
-					NotificationManager.success(
-						`Inscription reussi`,
-						`Bienvenu ${users.firstname}`
-					);
+				if (res.data.success === true) {
+					NotificationManager.success(`Inscription reussi`, `Bienvenu ${users.firstname}`);
 					window.location = "/profile/mine";
 				} else {
 					NotificationManager.error("Error", `${res.data.error}`);

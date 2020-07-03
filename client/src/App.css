@@ -5,9 +5,17 @@
   font-weight: bold;
 }
 
+.carousel-img-slide{
+  height: 100vh;
+}
+
 .registerform{
   width: 50%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+}
+
+*:focus {
+  outline: none;
 }
