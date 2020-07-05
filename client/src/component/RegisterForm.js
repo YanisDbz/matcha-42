@@ -4,8 +4,6 @@ import {NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
 
-axios.defaults.baseURL = "http://localhost:4000";
-
 export default function RegisterForm(props) {
 	const [modal, setModal] = useState()
 	const [users, setUsers] = useState({

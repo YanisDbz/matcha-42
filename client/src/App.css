@@ -1,3 +1,8 @@
+.App{
+  background-color: #33415c;
+  height: 100vh;
+}
+
 .NavHeader{
   width: 100%;
   z-index: 2;
@@ -16,6 +21,6 @@
   margin-right: auto;
 }
 
-*:focus {
-  outline: none;
+.route{
+  padding-top: 10%;
 }

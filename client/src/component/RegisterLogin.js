@@ -3,8 +3,9 @@ import axios from "axios";
 import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
+import Cookies from "js-cookie";
 
-axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.withCredentials = true
 
 export default function RegisterLogin(props) {
 	const [users, setUsers] = useState({
@@ -24,12 +25,13 @@ export default function RegisterLogin(props) {
 		axios
 			.post("/auth/login", users)
 			.then((res) => {
-				console.log(res.data);
+				console.log(res.data.access_token)
 				if (res.data.success === true) {
-					NotificationManager.success(`Inscription reussi`, `Bienvenu ${users.firstname}`);
-					window.location = "/profile/mine";
+					NotificationManager.success(`Content de vous revoir ${users.email}`, `Connexion reussi`);
+					//window.location = "/profile/mine";
+					console.log("cookie :" + Cookies.getJSON('jwt'))
 				} else {
-					NotificationManager.error("Error", `${res.data.error}`);
+					NotificationManager.error(`${res.data.message}`, "Error");
 				}
 			})
 			.catch((error) => {
@@ -80,6 +82,7 @@ export default function RegisterLogin(props) {
 					<Button variant="primary" type="submit">
 						Submit
 					</Button>
+					<p><a href="/forgot-pwd">Forgot your password ?</a></p>
 				</Form>
 			</Modal.Body>
 			<Modal.Footer style={{ justifyContent: "center" }}>
