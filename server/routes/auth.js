@@ -9,7 +9,7 @@ router.post('/register',[
   check('lastname').notEmpty().withMessage('Last NAme is required'),
   check('email').isEmail().withMessage('Email Invalid Format'),
   check('password').notEmpty().withMessage('Password is required'),
-], 
+],
 authController.register)
 router.post('/login', [
   check('email').notEmpty().withMessage('Email is required').isEmail().withMessage('Wrong Email format'),

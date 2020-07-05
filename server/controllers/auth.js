@@ -3,37 +3,70 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto")
 const { validationResult } = require('express-validator');
-const sendmail = require('../utils/sendMail')
+const {sendmailActivate} = require('../utils/sendMail')
 
 exports.login = (req, res) => {
 	const { email, password } = req.body;
 	const errorFormatter = ({ msg }) => { return `${msg}`};
 	var error_result = validationResult(req).formatWith(errorFormatter);
 	if(!error_result.isEmpty()){
-		console.log(error_result)
 		return res.json({ 
 			success: false,
 			error: error_result.array(),
 			message: error_result
 		});
 	}
-	connection.query("SELECT * FROM user WHERE email = ?", [email], (error, results) => {
-		if(!results[0]){
-			res.json({
+	connection.query("SELECT * FROM user WHERE email = ?", [email], (error, user) => {
+		if(!user[0]){
+			 res.json({
 				success: false,
 				error: "EMAIL_DSNT_EXIST",
 				message: "Email does not exist"
 			})
+		} else {
+			bcrypt.compare(password, user[0].password).then((result)=>{
+				if(result){
+				  console.log("Login Good Password")
+				  if(user[0].activate != 1){
+					  res.json({
+						  success: false,
+						  error: "USER_NOT_ACTIVATE",
+						  message: "Please check your mail to verify your account"
+					  })
+				  }
+				  	console.log(user);
+					const id = user[0].id;
+
+					const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+						expiresIn: process.env.JWT_EXPIRES_IN,
+					});
+
+					console.log("The JWT token is : " + token);
+
+					const cookieOptions = {
+						expires: new Date(
+							Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+						),
+						httpOnly: true,
+					};
+					res.cookie("jwt", token, cookieOptions);
+					res.json({
+						success: true,
+						access_token: token,
+						message: "User Login success"
+					});
+				} else {
+				  console.log("Login wrong password")
+				  res.json({
+					success: false,
+					error: "WRONG_PASSWORD",
+					message: "Wrong password"
+				  })
+				}
+			  })
 		}
-		bcrypt.compare(password, results[0].password, function(err, res) {
-			if (err){
-				
-			}
-			if (res){
-			} else {
-			}
-		})
 	})
+		
 }
 
 exports.register = (req, res) => {
@@ -87,7 +120,7 @@ exports.register = (req, res) => {
 							console.error(error);
 						} else {
 							console.log(results);
-							sendmail(email, "Activation de compte", activate_token)
+							sendmailActivate(email, "Activation de compte", activate_token)
 							res.json({
 								success: true,
 								message: "User Registered",

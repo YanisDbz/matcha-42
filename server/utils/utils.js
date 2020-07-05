@@ -13,4 +13,14 @@ const accountactivated = (email) => {
   })
 }
 
-module.exports = accountactivated
+const checkmail = (email) => {
+  connection.query("SELECT * FROM user WHERE email = ?", [email], (error, results) => {
+    if(results[0]){
+      return true
+    } else {
+      return false
+    }
+  })
+}
+
+module.exports = {accountactivated, checkmail}

@@ -1,5 +1,5 @@
 const connection = require("../config/db");
-const accountactivated = require('../utils/utils')
+const { accountactivated } = require('../utils/utils')
 
 exports.activate = (req, res) => {
   const {email, token} = req.query
