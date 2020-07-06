@@ -77,11 +77,9 @@ exports.register = (req, res) => {
 	var error_result = validationResult(req).formatWith(errorFormatter);
 
 	if(!error_result.isEmpty()){
-		console.log(error_result)
 		return res.json({ 
 			success: false,
 			error: error_result.array(),
-			message: error_result
 		});
 	}
 	connection.query(

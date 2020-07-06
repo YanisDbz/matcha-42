@@ -1,4 +1,5 @@
 const connection= require("../config/db")
+const bcrypt = require("bcrypt");
 
 
 const accountactivated = (email) => {
@@ -13,14 +14,28 @@ const accountactivated = (email) => {
   })
 }
 
-const checkmail = (email) => {
-  connection.query("SELECT * FROM user WHERE email = ?", [email], (error, results) => {
-    if(results[0]){
-      return true
+const updateSetPwdToken = (token, email) => {
+  connection.query("UPDATE user SET ? WHERE email = ?",
+  [{password_token: token}, email], (error, results) => {
+    if(error) {
+      console.log("updatepasswordtoken error" + error)
+      throw error
     } else {
-      return false
+      console.log("Password token updated")
     }
   })
 }
 
-module.exports = {accountactivated, checkmail}
+const updateSetNewPassword = (password, email) => {
+  bcrypt.hash(password, 10, function(err, hash) {
+    connection.query("UPDATE user SET ? WHERE email = ?",
+    [{password: hash, password_token: null}, email], (error, results) => {
+      if(error) {
+        console.log("New Password change error" + error)
+      } else {
+        console.log("Password changed success")
+      }
+    })
+  });
+}
+module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword }

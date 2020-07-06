@@ -10,4 +10,8 @@ router.post('/forgot-pwd', [
     .isEmail().withMessage('Email Wrong format')
 ], forgotpwd.forgotpwd)
 
+router.post('/changepwd', [
+    check('password').notEmpty().withMessage('Password required'),
+    check('passwordConfirm').notEmpty().withMessage('Password Confirm required')
+], forgotpwd.changepwd)
 module.exports = router

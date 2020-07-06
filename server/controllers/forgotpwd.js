@@ -1,24 +1,81 @@
 const connection = require("../config/db")
 const crypto = require("crypto")
-const { checkmail } = require('../utils/utils')
+const { updateSetPwdToken, updateSetNewPassword } = require('../utils/utils')
 const {sendmailPasswordForgot} = require('../utils/sendMail')
 const {  validationResult } = require('express-validator');
 
 exports.forgotpwd = (req, res) => {
     const {email} = req.body
-    const validate = validationResult(req);
-    if(!validate.isEmpty()){
+    const errorFormatter = ({ msg }) => { return `${msg}`};
+	var error_result = validationResult(req).formatWith(errorFormatter);
+
+	if(!error_result.isEmpty()){
+		return res.json({ 
+			success: false,
+			error: error_result.array(),
+		});
+	}
+    connection.query("SELECT * FROM user WHERE email = ?", [email], (errors, results) => {
+        if(results[0]){
+            const password_token = crypto.randomBytes(64).toString('hex');
+            updateSetPwdToken(password_token, email)
+            sendmailPasswordForgot(email, "Mot de passe oublié", password_token)
+            res.json({
+                success: true,
+                message: "password emaiil sent"
+            })
+        } else {
+            res.json({
+                success: false,
+                error: "EMAIL_DSNT_EXIST",
+                message: "We didint find your email"
+            })
+        }
+    })       
+}
+
+exports.changepwd = (req, res) => {
+    const {email, token} = req.query
+    const {password, passwordConfirm} = req.body
+    const errorFormatter = ({ msg }) => { return `${msg}`};
+	var error_result = validationResult(req).formatWith(errorFormatter);
+
+	if(!error_result.isEmpty()){
+		return res.json({ 
+			success: false,
+			error: error_result.array(),
+		});
+	}
+    if(password !== passwordConfirm){
         res.json({
             success: false,
-            error: validate.array(),
-            message: "Wrong email format"
+            error: "PASSWORD_NOT_MATCH",
+            message: "Error password do not match"
         })
     }
-    if(checkmail(email)){
-        console.log("email existe");
-    }
-    else {
-        console.log("email existe pas");
-        
-    }
+    connection.query("SELECT * FROM user WHERE email = ?", [email], (error, results) =>{
+        if(results[0]){
+            if(results[0].password_token === token){
+                updateSetNewPassword(password, email)
+                res.json({
+                    success: true,
+                    message: "Password Changed"
+                })
+            } else {
+                res.json({
+                    success: false,
+                    error: "WRONG_TOKEN",
+                    message: "Wrong token",
+                    redirectUrl : "/"
+                })
+            }
+        } else {
+            res.json({
+                success: false,
+                error: "WRONG_EMAIL",
+                message: "Email is not the correct one",
+                redirectUrl: "/"
+            })
+        }
+    })
 }

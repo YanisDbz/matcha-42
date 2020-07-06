@@ -1,5 +1,6 @@
 import React  from 'react'
 import { Form, Button, Modal } from "react-bootstrap";
+import { useLocation } from "react-router";
 import axios from "axios";
 import {NotificationContainer,NotificationManager,} from "react-notifications";
 
@@ -15,24 +16,25 @@ const FormForgotPwd = () => {
 			[e.target.name]: e.target.value,
 		});
     };
-    const handleSubmit = (e) => {
+    const url = useLocation()
+
+	const handleSubmit = (e) => {
 		e.preventDefault();
-		/*axios
-			.post("/change-pwd", users)
-			.then((res) => {
-				console.log(res.data);
-				if (res.data.success === true) {
-					NotificationManager.success(`Un email a ete envoye sur ${users.email}`, `Success`);
-				} else {
-					NotificationManager.error('L\'email entrer n\'existe pas', "Error")
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});*/
-	};
+		axios.post("/changepwd" + url.search, users)
+		.then((res) => {
+		console.log(res.data);
+		if (res.data.success == true) {
+			NotificationManager.success(`Mot de passe changer avec success`, `Super !`);
+		} else {
+			NotificationManager.error(`${res.data.error}`, "Error");
+		}
+	})
+	.catch((error) => {
+		console.log(error);
+	});
+}
     return (
-		<div>
+		<div class="route">
 			<NotificationContainer/>
 			<Form className="registerform" onSubmit={handleSubmit}>
 				<Form.Group controlId="password">
@@ -49,9 +51,9 @@ const FormForgotPwd = () => {
 					<Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
 					<Form.Control
 						type="password"
-						name="password"
+						name="passwordConfirm"
 						onChange={handleChange}
-						placeholder="Confirm new password"
+						placeholder="Enter new password"
 						value={users.passwordConfirm}
 					/>
 				</Form.Group>

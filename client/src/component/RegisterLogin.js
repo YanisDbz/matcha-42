@@ -25,13 +25,13 @@ export default function RegisterLogin(props) {
 		axios
 			.post("/auth/login", users)
 			.then((res) => {
-				console.log(res.data.access_token)
+				console.log(res.data)
 				if (res.data.success === true) {
 					NotificationManager.success(`Content de vous revoir ${users.email}`, `Connexion reussi`);
 					//window.location = "/profile/mine";
 					console.log("cookie :" + Cookies.getJSON('jwt'))
 				} else {
-					NotificationManager.error(`${res.data.message}`, "Error");
+					NotificationManager.error(`${res.data.error}`, "Error");
 				}
 			})
 			.catch((error) => {

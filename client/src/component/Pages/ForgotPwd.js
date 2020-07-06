@@ -23,7 +23,7 @@ const FormForgotPwd = () => {
 				if (res.data.success === true) {
 					NotificationManager.success(`Un email a ete envoye sur ${users.email}`, `Success`);
 				} else {
-					NotificationManager.error('L\'email entrer n\'existe pas', "Error")
+					NotificationManager.error(`${res.data.error}`, "Error")
 				}
 			})
 			.catch((error) => {
