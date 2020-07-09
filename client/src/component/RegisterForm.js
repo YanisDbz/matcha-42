@@ -1,11 +1,11 @@
-import React, { useState, useEffect, setState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
 
 export default function RegisterForm(props) {
-	const [modal, setModal] = useState()
+	//const [modal, setModal] = useState()
 	const [users, setUsers] = useState({
 		firstname: "",
 		lastname: "",
@@ -27,7 +27,7 @@ export default function RegisterForm(props) {
 			.post("/auth/register", users)
 			.then((res) => {
 				console.log(res.data);
-				if (res.data.success == true) {
+				if (res.data.success === true) {
 					NotificationManager.success(`Un email a ete envoye sur ${users.email}`, `Inscription reussi ${users.firstname}`);
 				} else if (res.data.error === "ALREADY_ACTIVE"){
 					NotificationManager.error(`Compte deja actif`, "Error");

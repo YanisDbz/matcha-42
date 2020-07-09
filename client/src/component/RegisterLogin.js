@@ -3,7 +3,7 @@ import axios from "axios";
 import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Form, Button, Modal } from "react-bootstrap";
-import Cookies from "js-cookie";
+import Cookie from "js-cookie"
 
 axios.defaults.withCredentials = true
 
@@ -25,11 +25,13 @@ export default function RegisterLogin(props) {
 		axios
 			.post("/auth/login", users)
 			.then((res) => {
-				console.log(res.data)
+				// console.log(res.data.opions.expires)
 				if (res.data.success === true) {
 					NotificationManager.success(`Content de vous revoir ${users.email}`, `Connexion reussi`);
-					//window.location = "/profile/mine";
-					console.log("cookie :" + Cookies.getJSON('jwt'))
+					Cookie.set("login", res.data.access_token, {expires: 7})
+					setTimeout(() => {
+						window.location="/app/verify"
+					}, 1000);
 				} else {
 					NotificationManager.error(`${res.data.error}`, "Error");
 				}

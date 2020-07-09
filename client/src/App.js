@@ -1,29 +1,31 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import NavBar from "./component/NavBar";
-import Slider from "./component/SliderHome";
-import Activate from "./component/Activate";
-import ForgotPwd from "./component/Pages/ForgotPwd"
-import ChangePwd from "./component/Pages/ChangePwd"
+import Navigation from "./component/Navigation"
+import Cookie from "js-cookie"
+import axios from "axios"
 import "./App.css";
-import UserProfile from "./component/Pages/UserProfil";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
+	const [user, setUser] = useState()
+	const [logged, setLogged] = useState(false)
+	const cookie = Cookie.get("login")
+
+	useEffect(() => {
+		axios.post('/getdatafromcookie', cookie)
+		.then((res) => {
+			if(res.data.success === true){
+				setLogged(true)
+				setUser(res.data.user)
+			}
+		})
+	}, [])
+
 	return (
 		<div className="App">
 			<header className="NavHeader">
-				<NavBar />
+				<NavBar user={user} logged={logged} />
 			</header>
-			<Router>
-				<Switch>
-					<Route path="/" exact component={Slider} />
-					<Route path="/profile/:user" exact component={UserProfile} />
-					<Route path="/activate"  component={Activate} />
-					<Route path="/forgot-pwd" component={ForgotPwd}/>
-					<Route path="/changepwd" component={ChangePwd}/>
-					{/* <Route path="/" component={() => <h4>ERROR 404</h4>} /> */}
-				</Switch>
-			</Router>
+			<Navigation user={user} logged={logged}/>
 		</div>
 	);
 }

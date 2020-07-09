@@ -61,20 +61,29 @@ exports.changepwd = (req, res) => {
                     success: true,
                     message: "Password Changed"
                 })
-            } else {
+            } 
+        } 
+    })
+}
+
+exports.checkChangePwd = (req, res) => {
+    const {email, token} = req.query
+    connection.query("SELECT * FROM user where email = ?", [email], (error, results) => {
+        if(results[0]){
+            if(results[0].password_token !== token){
                 res.json({
                     success: false,
                     error: "WRONG_TOKEN",
-                    message: "Wrong token",
-                    redirectUrl : "/"
+                    message: "Wrong Token",
+                    redirectUrl: "/error?error=incorrect_token"
                 })
             }
         } else {
             res.json({
                 success: false,
                 error: "WRONG_EMAIL",
-                message: "Email is not the correct one",
-                redirectUrl: "/"
+                message: "Incorrect Email",
+                redirectUrl: "/error?error=incorrect_email" 
             })
         }
     })

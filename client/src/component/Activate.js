@@ -12,7 +12,7 @@ export default function Activate(){
     .post("/activate" + url.search)
     .then((res) => {
       console.log(res.data);
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         NotificationManager.success(`Votre compte a ete activé`, `Super !`);
       } else if(res.data.error === "ALREADY_ACTIVE") {
         NotificationManager.warning(`${res.data.error}`, "Error");
