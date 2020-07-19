@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import RegisterForm from "../component/RegisterForm";
+import Cookie from "js-cookie"
 import RegisterLogin from "../component/RegisterLogin";
 import { Navbar, Nav, Dropdown } from "react-bootstrap";
 import { Button } from "@material-ui/core"
 
+
+
+const logout = (e) => {
+	e.preventDefault();
+	Cookie.remove("login")
+	window.location = "/"
+}
 export default function NavBar(props) {
 	const [modalLoginShow, setModalLoginShow] = useState();
 	const [modalRegisterShow, setModalRegisterShow] = useState();
 	const user = props.user
-  const islogged = props.logged
+    const islogged = props.logged
 	
-  if(islogged === false)
+
+   if(islogged === false)
 	{
 		return (
 			<Navbar collapseOnSelect expand="lg" bg="transparent" variant="light">
@@ -43,7 +52,7 @@ export default function NavBar(props) {
 							<Button variant="contained" color="primary">Profile</Button>
 						</Nav.Link>
 						<Nav.Link href="/logout">
-							<Button variant="contained" color="primary" >Logout</Button>
+							<Button onClick={logout} variant="contained" color="primary" >Logout</Button>
 						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
