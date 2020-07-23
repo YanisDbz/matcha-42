@@ -14,6 +14,7 @@ export default function RegisterForm(props) {
 		passwordConfirm: "",
 	});
 
+	const [error, setError] = useState('')
 	const handleChange = (e) => {
 		setUsers({
 			...users,
@@ -29,10 +30,13 @@ export default function RegisterForm(props) {
 				console.log(res.data);
 				if (res.data.success === true) {
 					NotificationManager.success(`Un email a ete envoye sur ${users.email}`, `Inscription reussi ${users.firstname}`);
+					setError('')
 				} else if (res.data.error === "ALREADY_ACTIVE"){
 					NotificationManager.error(`Compte deja actif`, "Error");
+					setError(res.data.message)
 				} else {
-					NotificationManager.error('Wrong Token', "Error")
+					NotificationManager.error(`${res.data.error}`, "Error")
+					setError(res.data.message)
 				}
 			})
 			.catch((error) => {
@@ -58,6 +62,7 @@ export default function RegisterForm(props) {
 			</Modal.Header>
 			<Modal.Body>
 				<Form className="registerform" onSubmit={handleSubmit}>
+				{error ? <Form.Text className="errorText">{error}</Form.Text> : ''}
 					<Form.Group controlId="firstname">
 						<Form.Label htmlFor="firstname">First Name</Form.Label>
 						<Form.Control
@@ -67,7 +72,6 @@ export default function RegisterForm(props) {
 							placeholder="Enter email"
 							value={users.firstname}
 						/>
-						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
 					<Form.Group controlId="lastname">
 						<Form.Label htmlFor="lastname">Last Name</Form.Label>
@@ -78,7 +82,6 @@ export default function RegisterForm(props) {
 							placeholder="Enter email"
 							value={users.lastname}
 						/>
-						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
 					<Form.Group controlId="email">
 						<Form.Label htmlFor="email">Email</Form.Label>
@@ -89,7 +92,6 @@ export default function RegisterForm(props) {
 							placeholder="Enter email"
 							value={users.email}
 						/>
-						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
 					<Form.Group controlId="password">
 						<Form.Label htmlFor="password">Password</Form.Label>
@@ -100,7 +102,6 @@ export default function RegisterForm(props) {
 							placeholder="Enter email"
 							value={users.password}
 						/>
-						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
 					<Form.Group controlId="passwordConfirm">
 						<Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
@@ -111,7 +112,6 @@ export default function RegisterForm(props) {
 							placeholder="Enter email"
 							value={users.passwordConfirm}
 						/>
-						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
 					<Button variant="primary" type="submit">
 						Submit

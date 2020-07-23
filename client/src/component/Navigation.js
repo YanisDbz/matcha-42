@@ -19,7 +19,7 @@ export default function Navigation(props){
       <Switch>
         <Route exact path="/" exact component={Slider} />
         <Route exact path="/profile" component={() => <UserProfile user={user} />} />
-        <Route path="/app/verify" component={Verify}/>
+        <Route path="/app/verify" component={() => <Verify user={user} />}/>
         {/* <Route path="/user/:id" component={ChangePwd}/> */}
         <Route path="/" component={ErrorPage} />
       </Switch>

@@ -39,7 +39,7 @@ exports.login = (req, res) => {
 
 					const token = jwt.sign({ id }, process.env.JWT_SECRET);
 
-					console.log("The JWT token is : " + token);
+					// console.log("The JWT token is : " + token);
 					res.json({
 						success: true,
 						access_token: token,
@@ -90,7 +90,7 @@ exports.register = (req, res) => {
 				return res.json({
 					success: false,
 					error: "PASSWORD_NOT_MATCH",
-					message: "password do not match",
+					message: "Password do not match",
 				});
 			}
 			bcrypt.hash(password, 10, function (err, hash) {

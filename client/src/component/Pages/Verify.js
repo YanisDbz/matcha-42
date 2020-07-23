@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import {TextField, FormControl, InputLabel, Select, MenuItem, makeStyles, CardMedia, Card, Button} from "@material-ui/core"
+import {TextField, FormControl, InputLabel, Select, MenuItem, makeStyles, CardMedia, Card, Button, FlatButton} from "@material-ui/core"
 import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
+import axios from "axios"
 
 const useStyles = makeStyles((theme) => ({
     spacing: {
@@ -16,15 +17,17 @@ const useStyles = makeStyles((theme) => ({
     },
     media: {
         height: 0,
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '56.25%',
       },
 }));
 
-export default function Verify() {
+export default function Verify(props) {
     const classes = useStyles();
     const [orientation, setOrientation] = useState('')
     const [gender, setGender] = useState('')
     const [image, setImage] = useState();
+    const [preview, setPreview] = useState();
+    const [date, setDate] = useState('')
 
     const handleChange = (e) => {
         setOrientation(e.target.value)
@@ -32,20 +35,32 @@ export default function Verify() {
     const handleChangeOrientation = (e) => {
         setGender(e.target.value)
     }
+    const  handlechangeDate = (e) => {
+        setDate(e.target.value)
+    }
     const onDrop = (e) => {
         const reader = new FileReader()
         reader.onload = () => {
             if(reader.readyState === 2) {
-                setImage(reader.result)
+                setPreview(reader.result)
             }
         }
-        reader.readAsDataURL(e.target.files[0])
     };
 
-    const onSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        NotificationManager.success(`Tout est ok}`, `Connexion reussi`);
-
+        const user = props.user
+        const formData = new FormData();
+        formData.append('image', image);
+        formData.append('date', date)
+        formData.append('gender', gender)
+        formData.append('orientation', orientation)
+        formData.append('user_id', user.id)
+        axios.post('/verify', formData).then((res) => {
+            console.log(res.data)
+        }).catch((error) => {
+            console.log(error)
+        })
     }
     return (
         <div className="registerform" style={{ paddingTop: '5rem', color:'white'}}>
@@ -59,15 +74,17 @@ export default function Verify() {
                 InputLabelProps={{
                     shrink: true,
                 }}
+                onChange={handlechangeDate}
+                value={date}
             />
             <FormControl className={classes.formControl}>
                 <InputLabel id="orientation">Orientation</InputLabel>
                 <Select
                     labelId="orientation"
                     id="orientation"
+                    name="orientation"
                     value={orientation}
                     onChange={handleChange}
-                    autoWidth
                     color="secondary"
                 >
                     <MenuItem value={"Hetero"}>Hetero</MenuItem>
@@ -80,6 +97,7 @@ export default function Verify() {
                 <Select
                     labelId="gender"
                     id="gender"
+                    name="gender"
                     value={gender}
                     onChange={handleChangeOrientation}
                     autoWidth
@@ -90,11 +108,11 @@ export default function Verify() {
                 </Select>
             </FormControl>
             <br/>
-            <label htmlFor="upload-photo">
+            <label htmlFor="img-profil">
                 <input
                     style={{ display: "none" }}
-                    id="upload-photo"
-                    name="upload-photo"
+                    id="img-profil"
+                    name="img-profil"
                     type="file"
                     onChange={onDrop}
                 />
@@ -102,19 +120,17 @@ export default function Verify() {
                 Upload Photo
             </Button>
             </label>
-            <Button color="primary" variant="contained" component="span" type="submit">
+            <Button onClick={handleSubmit} color="primary" variant="contained" component="button" type="submit">
                 Confirm Inscription
             </Button>
            </form>
-           {image ? (
                <Card>
                <CardMedia
                     className={classes.media}
-                    image={image}
-                    title="Paella dish"
+                    image={preview}
                 />
                </Card>
-           ) : (<div>Loading ...</div>)}
+    
         </div>
     )
 }

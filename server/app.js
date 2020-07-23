@@ -1,4 +1,5 @@
 const express = require('express')
+const file = require('express-fileupload')
 const cors = require('cors')
 // const bodyParser = require('body-parser')
 require('./config/db')
@@ -17,6 +18,7 @@ app.options('*', cors(corsConfig))
 app.use(express.urlencoded({ extended: false}))
 app.use(express.json())
 app.use(cookieParser())
+app.use(file())
 app.use('/', require('./routes/pages'))
 app.use('/auth', require('./routes/auth'))
 
