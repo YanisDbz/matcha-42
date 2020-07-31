@@ -20,12 +20,12 @@ exports.forgotpwd = (req, res) => {
             const password_token = crypto.randomBytes(64).toString('hex');
             updateSetPwdToken(password_token, email)
             sendmailPasswordForgot(email, "Mot de passe oublié", password_token)
-            res.json({
+            return res.json({
                 success: true,
                 message: "password emaiil sent"
             })
         } else {
-            res.json({
+            return res.json({
                 success: false,
                 error: "EMAIL_DSNT_EXIST",
                 message: "We didint find your email"
@@ -47,7 +47,7 @@ exports.changepwd = (req, res) => {
 		});
 	}
     if(password !== passwordConfirm){
-        res.json({
+        return res.json({
             success: false,
             error: "PASSWORD_NOT_MATCH",
             message: "Error password do not match"
@@ -57,7 +57,7 @@ exports.changepwd = (req, res) => {
         if(results[0]){
             if(results[0].password_token === token){
                 updateSetNewPassword(password, email)
-                res.json({
+                return res.json({
                     success: true,
                     message: "Password Changed"
                 })
@@ -71,7 +71,7 @@ exports.checkChangePwd = (req, res) => {
     connection.query("SELECT * FROM user where email = ?", [email], (error, results) => {
         if(results[0]){
             if(results[0].password_token !== token){
-                res.json({
+                return res.json({
                     success: false,
                     error: "WRONG_TOKEN",
                     message: "Wrong Token",
@@ -79,7 +79,7 @@ exports.checkChangePwd = (req, res) => {
                 })
             }
         } else {
-            res.json({
+            return res.json({
                 success: false,
                 error: "WRONG_EMAIL",
                 message: "Incorrect Email",

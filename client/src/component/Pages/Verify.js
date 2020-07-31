@@ -1,8 +1,25 @@
 import React, {useState} from 'react'
+import Rselect from 'react-select'
+import makeAnimated from 'react-select/animated';
 import {TextField, FormControl, InputLabel, Select, MenuItem, makeStyles, CardMedia, Card, Button, FlatButton} from "@material-ui/core"
 import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import axios from "axios"
+
+const options = [
+    { value: 'musique', label: 'Musique' },
+    { value: 'sport', label: 'Sport' },
+    { value: 'dance', label: 'Dance' },
+    { value: 'cuisine', label: 'Cuisine'},
+    { value: 'jeux_video', label: 'Jeux Video'},
+    { value: 'voyage', label: 'Voyage' },
+    { value: 'photo', label: 'Photo' },
+    { value: 'animaux', label: 'Animaux' },
+    { value: 'voiture', label: 'Voiture'},
+    { value: 'sortie', label: 'Sortie'},
+];
+
+const animatedComponents = makeAnimated();
 
 const useStyles = makeStyles((theme) => ({
     spacing: {
@@ -28,7 +45,11 @@ export default function Verify(props) {
     const [image, setImage] = useState();
     const [preview, setPreview] = useState();
     const [date, setDate] = useState('')
+    const [selectedOptions, setSelectedOptions] = useState({});
 
+    const handleChangeOptions = (opt) => {
+        setSelectedOptions(opt);
+    };
     const handleChange = (e) => {
         setOrientation(e.target.value)
     }
@@ -39,13 +60,20 @@ export default function Verify(props) {
         setDate(e.target.value)
     }
     const onDrop = (e) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-            if(reader.readyState === 2) {
+        e.preventDefault(); 
+        let reader = new FileReader();
+        let file = e.target.files[0];
+        if(e.target.value.length == 0){
+            setImage()
+            setPreview()
+        } else {
+            reader.onload = () => {
+                setImage(file)
                 setPreview(reader.result)
             }
+            reader.readAsDataURL(file)
         }
-    };
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -56,14 +84,23 @@ export default function Verify(props) {
         formData.append('gender', gender)
         formData.append('orientation', orientation)
         formData.append('user_id', user.id)
+        formData.append('tag', selectedOptions)
         axios.post('/verify', formData).then((res) => {
             console.log(res.data)
         }).catch((error) => {
             console.log(error)
         })
     }
+    
+    for (var i = 0; i < selectedOptions.length; i++) {
+        result[selectedOptions[i].label] = selectedOptions[i].value;
+    }
+    if(result){
+        console.log(result);
+    }
+    
     return (
-        <div className="registerform" style={{ paddingTop: '5rem', color:'white'}}>
+        <div className="registerform" style={{ paddingTop: '5rem'}}>
             <NotificationContainer />
            <form  className={classes.spacing}>
             <TextField
@@ -108,6 +145,19 @@ export default function Verify(props) {
                 </Select>
             </FormControl>
             <br/>
+            <FormControl className={classes.formControl}>
+            <Rselect
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                options={options}
+                onChange={handleChangeOptions}
+                isMulti
+                isSearchable
+                placeholder="Hobbies"
+                name="tag"
+            />
+            </FormControl>
+            <br/>
             <label htmlFor="img-profil">
                 <input
                     style={{ display: "none" }}
@@ -124,12 +174,12 @@ export default function Verify(props) {
                 Confirm Inscription
             </Button>
            </form>
-               <Card>
-               <CardMedia
-                    className={classes.media}
-                    image={preview}
-                />
-               </Card>
+               {preview ? <Card>
+                <CardMedia
+                        className={classes.media}
+                        image={preview}
+                    />
+                </Card> : ''}
     
         </div>
     )
