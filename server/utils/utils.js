@@ -26,6 +26,28 @@ const updateSetPwdToken = (token, email) => {
   })
 }
 
+const setImgProfil = (path_img, user_id) => {
+  connection.query("UPDATE user SET ? where id = ?", [{imgprofil: path_img, verify: "1"}, user_id], (error, results) => {
+    if(error){
+      console.log("set imgprofil error\n" + error);
+      return error
+    } else {
+      console.log("Imgprofil Set")
+      return true
+    }
+  })
+}
+const setUserTag = (tag, value) => {
+  connection.query(`INSERT INTO tag(${tag},user_id) VALUES(?)`, [value], (error, results) => {
+    if(error){
+      console.log(error);
+      return error
+    } else {
+      console.log("User Tag Set");
+      return true
+    }
+  })
+}
 const updateSetNewPassword = (password, email) => {
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query("UPDATE user SET ? WHERE email = ?",
@@ -49,4 +71,4 @@ const getAge = (dateString) => {
   }
   return age;
 }
-module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge }
+module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setImgProfil }

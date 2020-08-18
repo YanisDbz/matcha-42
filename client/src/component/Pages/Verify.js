@@ -7,16 +7,16 @@ import "react-notifications/lib/notifications.css";
 import axios from "axios"
 
 const options = [
-    { value: 'musique', label: 'Musique' },
-    { value: 'sport', label: 'Sport' },
-    { value: 'dance', label: 'Dance' },
-    { value: 'cuisine', label: 'Cuisine'},
-    { value: 'jeux_video', label: 'Jeux Video'},
-    { value: 'voyage', label: 'Voyage' },
-    { value: 'photo', label: 'Photo' },
-    { value: 'animaux', label: 'Animaux' },
-    { value: 'voiture', label: 'Voiture'},
-    { value: 'sortie', label: 'Sortie'},
+    { value: '1', label: 'Musique' },
+    { value: '2', label: 'Sport' },
+    { value: '3', label: 'Dance' },
+    { value: '4', label: 'Cuisine'},
+    { value: '5', label: 'Jeux Video'},
+    { value: '6', label: 'Voyage' },
+    { value: '7', label: 'Photo' },
+    { value: '8', label: 'Animaux' },
+    { value: '9', label: 'Cuisine'},
+    { value: '10', label: 'Sortie'},
 ];
 
 const animatedComponents = makeAnimated();
@@ -45,7 +45,7 @@ export default function Verify(props) {
     const [image, setImage] = useState();
     const [preview, setPreview] = useState();
     const [date, setDate] = useState('')
-    const [selectedOptions, setSelectedOptions] = useState({});
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     const handleChangeOptions = (opt) => {
         setSelectedOptions(opt);
@@ -84,19 +84,28 @@ export default function Verify(props) {
         formData.append('gender', gender)
         formData.append('orientation', orientation)
         formData.append('user_id', user.id)
-        formData.append('tag', selectedOptions)
+        if(selectedOptions){
+            formData.append('tag', selectedOptions.map(a => a.value))
+        }
         axios.post('/verify', formData).then((res) => {
-            console.log(res.data)
+            console.log(res.data);
+            
+            // if(res.data.success === true) {
+            //     NotificationManager.success(`Votre compte est maintenant verifé`, `Super !`);
+            //     setTimeout(() => {
+            //         window.location="/profile"
+            //     }, 1000);
+            // } else if (res.data.error === "EMPTY_FIELD") {
+            //     for (let i = 0; i < res.data.error_len; i++) {
+            //         const message = res.data.message[i].message
+            //         NotificationManager.error(`${message}`, "Error")
+            //     }
+            // } else {
+            //     NotificationManager.error(`${res.data.message}`, "Error");
+            // }
         }).catch((error) => {
             console.log(error)
         })
-    }
-    
-    for (var i = 0; i < selectedOptions.length; i++) {
-        result[selectedOptions[i].label] = selectedOptions[i].value;
-    }
-    if(result){
-        console.log(result);
     }
     
     return (

@@ -5,10 +5,11 @@ import ErrorPage from "./ErrorPage";
 export default function userProfile(props) {
 	const user =  props.user
 	
+	console.log(user)
 	return(
 		<div style={{ paddingTop: '5rem' }}>
 			<Card style={{ width: '18rem' }}>
-			<Card.Img variant="top" src="/profile.jpg" />
+			<Card.Img variant="top" src={user.imgprofil} />
 				<Card.Body>
 				<Card.Title>{user.firstname} {user.lastname}</Card.Title>
 				<Card.Text>
