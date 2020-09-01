@@ -16,7 +16,7 @@ export default function NavBar(props) {
 	const [modalLoginShow, setModalLoginShow] = useState();
 	const [modalRegisterShow, setModalRegisterShow] = useState();
 	const user = props.user
-    const islogged = props.logged
+  const islogged = props.logged
 	
 
    if(islogged === false)

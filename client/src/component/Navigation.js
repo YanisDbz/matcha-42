@@ -13,19 +13,30 @@ export default function Navigation(props){
   const user = props.user
   const islogged = props.logged
   
-  if(islogged){
+  if(islogged && props.user.verify === 0){
     return(
       <Router>
-      <Switch>
-        <Route exact path="/" exact component={Slider} />
-        <Route exact path="/profile" component={() => <UserProfile user={user} />} />
-        <Route path="/app/verify" component={() => <Verify user={user} />}/>
-        {/* <Route path="/user/:id" component={ChangePwd}/> */}
-        <Route path="/" component={ErrorPage} />
-      </Switch>
-  </Router>
+          <Switch>
+            <Route exact path="/" exact component={Slider} />
+            <Route exact path="/profile" component={() => <UserProfile user={user} />} />
+            <Route path="/app/verify" component={() => <Verify user={user} />}/>
+            <Route path="/" component={ErrorPage} />
+          </Switch>
+      </Router>
     )
   }
+  else if(islogged && props.user.verify === 1){
+    return(
+      <Router>
+          <Switch>
+            <Route exact path="/" exact component={Slider} />
+            <Route exact path="/profile" component={() => <UserProfile user={user} />} />
+            <Route path="/" component={ErrorPage} />
+          </Switch>
+      </Router>
+    )
+  }
+  else {
   return (
     <Router>
       <Switch>
@@ -33,9 +44,9 @@ export default function Navigation(props){
         <Route path="/activate"  component={Activate} />
         <Route path="/forgot-pwd" component={ForgotPwd}/>
         <Route path="/changepwd" component={ChangePwd}/>
-        {/* <Route path="/user/:id" component={ChangePwd}/> */}
         <Route path="/" component={ErrorPage} />
       </Switch>
   </Router>
   )
+ }
 }

@@ -1,23 +1,34 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Card, Button} from "react-bootstrap"
-import ErrorPage from "./ErrorPage";
+import Cookie from "js-cookie"
+import axios from "axios"
 
-export default function userProfile(props) {
+function userProfile(props) {
 	const user =  props.user
-	
-	console.log(user)
+	const cookie = Cookie.get("login")
+
+	console.log(cookie);
+
 	return(
 		<div style={{ paddingTop: '5rem' }}>
-			<Card style={{ width: '18rem' }}>
+			<Card bg="Light" style={{ width: '25rem' }}>
 			<Card.Img variant="top" src={user.imgprofil} />
 				<Card.Body>
 				<Card.Title>{user.firstname} {user.lastname}</Card.Title>
+				<br/>
 				<Card.Text>
-					Some quick example text to build on the card title and make up the bulk of
-					the card's content.
+					Age: {user.age}
+					<br/>
+					<br/>
+					Sexe: {user.gender}
+					<br/>
+					<br/>
+					Orientation: {user.orientation}
 				</Card.Text>
 			</Card.Body>
 		</Card>
 		</div>
 	)
 }
+
+export default userProfile;

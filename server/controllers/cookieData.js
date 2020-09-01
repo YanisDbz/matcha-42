@@ -9,15 +9,14 @@ const getDataFromCookie = (req, res) => {
     user_id = decode.id
     connection.query("SELECT * FROM user WHERE id = ?", [user_id], (error, results) => {
       if(results[0]){
-        res.json({
+        return res.json({
           success: true,
           user: results[0]
         })
       }
     })
   } else {
-    // console.log("Cookie login dsnt existe");
-    res.json({
+    return res.json({
       success: false,
       error: "USER_NOT_LOGGED",
       message: "User not logged"

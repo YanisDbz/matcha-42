@@ -1,7 +1,7 @@
 const connection = require('../config/db')
 const fs = require('fs')
 const path = require('path')
-const {getAge, setUserTag, setImgProfil} = require('../utils/utils')
+const {getAge, setUserTag, setProfilData} = require('../utils/utils')
 const { validationResult } = require('express-validator');
 
 const myValidationResult = validationResult.withDefaults({
@@ -65,8 +65,10 @@ const verify = (req, res) => {
     imgprofil.mv(`../client/public/img/${user_id}/${imgname}`, err => {
       if(err) throw err
     })
-    // setImgProfil(`/img/${user_id}/${imgname}`, user_id)
-    // setUserTag(tag, value)
+    for (let i = 0; i < value.length; i++) {
+      setUserTag(user_id, value[i])
+    }
+    setProfilData(`/img/${user_id}/${imgname}`, user_id, getAge(date), gender, orientation)
     return res.json({
       success: true,
       message: 'Your account is now verified'

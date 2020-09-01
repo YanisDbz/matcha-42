@@ -88,21 +88,20 @@ export default function Verify(props) {
             formData.append('tag', selectedOptions.map(a => a.value))
         }
         axios.post('/verify', formData).then((res) => {
-            console.log(res.data);
-            
-            // if(res.data.success === true) {
-            //     NotificationManager.success(`Votre compte est maintenant verifé`, `Super !`);
-            //     setTimeout(() => {
-            //         window.location="/profile"
-            //     }, 1000);
-            // } else if (res.data.error === "EMPTY_FIELD") {
-            //     for (let i = 0; i < res.data.error_len; i++) {
-            //         const message = res.data.message[i].message
-            //         NotificationManager.error(`${message}`, "Error")
-            //     }
-            // } else {
-            //     NotificationManager.error(`${res.data.message}`, "Error");
-            // }
+            console.log(res.data); 
+            if(res.data.success === true) {
+                NotificationManager.success(`Votre compte est maintenant verifé`, `Super !`);
+                setTimeout(() => {
+                    window.location="/profile"
+                }, 1000);
+            } else if (res.data.error === "EMPTY_FIELD") {
+                for (let i = 0; i < res.data.error_len; i++) {
+                    const message = res.data.message[i].message
+                    NotificationManager.error(`${message}`, "Error")
+                }
+            } else {
+                NotificationManager.error(`${res.data.message}`, "Error");
+            }
         }).catch((error) => {
             console.log(error)
         })
@@ -139,7 +138,7 @@ export default function Verify(props) {
                 </Select>
             </FormControl>
             <FormControl className={classes.formControl}>
-                <InputLabel id="gender">Gender</InputLabel>
+                <InputLabel id="gender">Sexe</InputLabel>
                 <Select
                     labelId="gender"
                     id="gender"
@@ -149,8 +148,8 @@ export default function Verify(props) {
                     autoWidth
                     color="secondary"
                 >
-                    <MenuItem value="Male">Male</MenuItem>
-                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Homme">Homme</MenuItem>
+                    <MenuItem value="Femme">Femme</MenuItem>
                 </Select>
             </FormControl>
             <br/>
@@ -189,7 +188,6 @@ export default function Verify(props) {
                         image={preview}
                     />
                 </Card> : ''}
-    
         </div>
     )
 }

@@ -26,8 +26,9 @@ const updateSetPwdToken = (token, email) => {
   })
 }
 
-const setImgProfil = (path_img, user_id) => {
-  connection.query("UPDATE user SET ? where id = ?", [{imgprofil: path_img, verify: "1"}, user_id], (error, results) => {
+const setProfilData = (path_img, user_id, age, gender, orientation) => {
+  connection.query("UPDATE user SET ? where id = ?", [
+    {imgprofil: path_img, verify: "1", age: age, gender: gender, orientation: orientation}, user_id], (error, results) => {
     if(error){
       console.log("set imgprofil error\n" + error);
       return error
@@ -37,8 +38,8 @@ const setImgProfil = (path_img, user_id) => {
     }
   })
 }
-const setUserTag = (tag, value) => {
-  connection.query(`INSERT INTO tag(${tag},user_id) VALUES(?)`, [value], (error, results) => {
+const setUserTag = (user_id, value) => {
+  connection.query(`INSERT INTO user_tag(user_id, tag_id) VALUES(?, ?)`, [user_id, value], (error, results) => {
     if(error){
       console.log(error);
       return error
@@ -71,4 +72,4 @@ const getAge = (dateString) => {
   }
   return age;
 }
-module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setImgProfil }
+module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData }

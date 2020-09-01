@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 18, 2020 at 02:38 PM
+-- Generation Time: Sep 01, 2020 at 02:29 PM
 -- Server version: 8.0.20
 -- PHP Version: 7.4.8
 
@@ -65,15 +65,18 @@ CREATE TABLE `user` (
   `activate` tinyint NOT NULL DEFAULT '0',
   `password_token` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `imgprofil` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `verify` tinyint NOT NULL DEFAULT '0'
+  `verify` tinyint NOT NULL DEFAULT '0',
+  `age` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `gender` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `orientation` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `created`, `activate_token`, `activate`, `password_token`, `imgprofil`, `verify`) VALUES
-(32, 'Yanis', 'Debbouza', 'debbouza.yanis@outlook.fr', '$2b$10$F.6RNtue/rVKAsQ/Ti5KNOP65ybKVGRl6KqHic6JNEXUkeR8va5aC', '1596121052799', NULL, 1, NULL, '/img/32/159671256337232.jpg', 1);
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `created`, `activate_token`, `activate`, `password_token`, `imgprofil`, `verify`, `age`, `gender`, `orientation`) VALUES
+(32, 'Yanis', 'Debbouza', 'debbouza.yanis@outlook.fr', '$2b$10$F.6RNtue/rVKAsQ/Ti5KNOP65ybKVGRl6KqHic6JNEXUkeR8va5aC', '1596121052799', NULL, 1, NULL, '/img/32/159895616535232.png', 1, '24', 'Homme', 'Hetero');
 
 -- --------------------------------------------------------
 
@@ -88,6 +91,17 @@ CREATE TABLE `user_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `user_tag`
+--
+
+INSERT INTO `user_tag` (`id`, `user_id`, `tag_id`) VALUES
+(12, 32, 1),
+(13, 32, 2),
+(14, 32, 3),
+(15, 32, 4),
+(16, 32, 5);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -95,6 +109,12 @@ CREATE TABLE `user_tag` (
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_tag`
+--
+ALTER TABLE `user_tag`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -106,6 +126,12 @@ ALTER TABLE `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `user_tag`
+--
+ALTER TABLE `user_tag`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

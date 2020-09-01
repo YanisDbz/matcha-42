@@ -25,13 +25,18 @@ export default function RegisterLogin(props) {
 		axios
 			.post("/auth/login", users)
 			.then((res) => {
-				// console.log(res.data.opions.expires)
 				if (res.data.success === true) {
 					NotificationManager.success(`Content de vous revoir ${users.email}`, `Connexion reussi`);
 					Cookie.set("login", res.data.access_token, {expires: 7})
-					setTimeout(() => {
-						window.location="/app/verify"
-					}, 1000);
+					if(res.data.user.verify === 1) {
+						setTimeout(() => {
+							window.location="/app/verify"
+						}, 1000);
+					} else {
+						setTimeout(() => {
+							window.location="/profile"
+						}, 1000);
+					}
 				} else {
 					NotificationManager.error(`${res.data.error}`, "Error");
 				}

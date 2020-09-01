@@ -1,6 +1,7 @@
 const express = require('express')
 const activateController = require('../controllers/activateUser')
 const getDataFromCookie = require('../controllers/cookieData')
+const getTagData = require('../controllers/tagData')
 const verify = require('../controllers/verifyUser')
 const router = express.Router()
 const { check } = require('express-validator');
@@ -24,4 +25,6 @@ router.post('/verify',[
     check('orientation').notEmpty().withMessage('Orientation required'),
     check('gender').notEmpty().withMessage('Gender Required')
 ], verify)
+
+router.post('/user/tag', getTagData)
 module.exports = router
