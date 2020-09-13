@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Sep 01, 2020 at 02:29 PM
--- Server version: 8.0.20
--- PHP Version: 7.4.8
+-- Hôte : 127.0.0.1:3308
+-- Généré le :  Dim 13 sep. 2020 à 14:27
+-- Version du serveur :  8.0.18
+-- Version de PHP :  7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,22 +19,23 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `matcha`
+-- Base de données :  `matcha`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tag`
+-- Structure de la table `tag`
 --
 
-CREATE TABLE `tag` (
-  `id` int NOT NULL,
-  `label` varchar(256) COLLATE utf8mb4_general_ci NOT NULL
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE IF NOT EXISTS `tag` (
+  `id` int(11) NOT NULL,
+  `label` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tag`
+-- Déchargement des données de la table `tag`
 --
 
 INSERT INTO `tag` (`id`, `label`) VALUES
@@ -51,47 +53,70 @@ INSERT INTO `tag` (`id`, `label`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Structure de la table `user`
 --
 
-CREATE TABLE `user` (
-  `id` int NOT NULL,
-  `firstname` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
-  `lastname` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `lastname` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `activate_token` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `activate` tinyint NOT NULL DEFAULT '0',
-  `password_token` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `imgprofil` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `verify` tinyint NOT NULL DEFAULT '0',
-  `age` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `gender` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `orientation` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `activate` tinyint(4) NOT NULL DEFAULT '0',
+  `password_token` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `imgprofil` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `verify` tinyint(4) NOT NULL DEFAULT '0',
+  `bio` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `age` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `gender` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `orientation` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
+-- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `created`, `activate_token`, `activate`, `password_token`, `imgprofil`, `verify`, `age`, `gender`, `orientation`) VALUES
-(32, 'Yanis', 'Debbouza', 'debbouza.yanis@outlook.fr', '$2b$10$F.6RNtue/rVKAsQ/Ti5KNOP65ybKVGRl6KqHic6JNEXUkeR8va5aC', '1596121052799', NULL, 1, NULL, '/img/32/159895616535232.png', 1, '24', 'Homme', 'Hetero');
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `created`, `activate_token`, `activate`, `password_token`, `imgprofil`, `verify`, `bio`, `age`, `gender`, `orientation`) VALUES
+(32, 'Yanis', 'Debbouza', 'debbouza.yanis@outlook.fr', '$2b$10$F.6RNtue/rVKAsQ/Ti5KNOP65ybKVGRl6KqHic6JNEXUkeR8va5aC', '1596121052799', NULL, 1, NULL, '/img/32/159895616535232.png', 1, NULL, '24', 'Homme', 'Hetero');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_tag`
+-- Structure de la table `user_image`
 --
 
-CREATE TABLE `user_tag` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `tag_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `user_image`;
+CREATE TABLE IF NOT EXISTS `user_image` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `img1` varchar(256) DEFAULT NULL,
+  `img2` varchar(256) DEFAULT NULL,
+  `img3` varchar(256) DEFAULT NULL,
+  `img4` varchar(256) DEFAULT NULL,
+  `img5` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `user_tag`
+-- Structure de la table `user_tag`
+--
+
+DROP TABLE IF EXISTS `user_tag`;
+CREATE TABLE IF NOT EXISTS `user_tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `tag_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `user_tag`
 --
 
 INSERT INTO `user_tag` (`id`, `user_id`, `tag_id`) VALUES
@@ -100,38 +125,6 @@ INSERT INTO `user_tag` (`id`, `user_id`, `tag_id`) VALUES
 (14, 32, 3),
 (15, 32, 4),
 (16, 32, 5);
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user_tag`
---
-ALTER TABLE `user_tag`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
-
---
--- AUTO_INCREMENT for table `user_tag`
---
-ALTER TABLE `user_tag`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
