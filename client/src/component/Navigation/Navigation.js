@@ -1,11 +1,11 @@
 import React from "react"
-import Slider from "./SliderHome";
-import Activate from "./Activate";
-import ForgotPwd from "./Pages/ForgotPwd"
-import ChangePwd from "./Pages/ChangePwd"
-import UserProfile from "./Pages/UserProfil";
-import ErrorPage from "./Pages/ErrorPage"
-import Verify from "./Pages/Verify"
+import Slider from "../Slider/SliderHome";
+import Activate from "../Activate/Activate";
+import ForgotPwd from "../Pages/ForgotPwd/ForgotPwd"
+import ChangePwd from "../Pages/ChangePwd/ChangePwd"
+import UserProfile from "../Pages/User/UserProfil";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage"
+import Verify from "../Pages/Verify/Verify"
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 

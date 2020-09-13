@@ -1,13 +1,24 @@
-.App{
-  background-color: white;
-  height: 100vh;
+body, html, .App{
+  background-color: #121212;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
 }
 
+*:focus {
+  outline: none !important;
+}
 .NavHeader{
   width: 100%;
   z-index: 2;
   position: fixed;
   font-weight: bold;
+}
+
+.colorNav{
+  background-color: #333;
 }
 
 .carousel-img-slide{
@@ -42,6 +53,37 @@
   transition: opacity 0.3s;
 }
 
+
+.profil-container{
+  width: 75%;
+  min-width: 200px;
+  color: #fff;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  position: absolute;
+}
+
+.profil-avatar{
+  margin: auto !important;
+  width: 200px !important;
+  height: 200px !important;
+
+}
+.modalTitle{
+  text-align: center;
+  border-bottom: 1px solid gray;
+}
+.modalEdit{
+  display: flex;
+  justify-content: space-between;
+}
+.test{
+  background-color: black;
+  height: 100vh;
+  position: absolute;
+}
 .loader--hide {
   opacity: 0;
 }

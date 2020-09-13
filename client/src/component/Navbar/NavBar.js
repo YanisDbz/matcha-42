@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import RegisterForm from "../component/RegisterForm";
+import RegisterForm from "../Auth/RegisterForm";
 import Cookie from "js-cookie"
-import RegisterLogin from "../component/RegisterLogin";
+import RegisterLogin from "../Auth/RegisterLogin";
 import { Navbar, Nav, Dropdown } from "react-bootstrap";
 import { Button } from "@material-ui/core"
+import Brightness7Icon from '@material-ui/icons/Brightness7';
 
 
 
@@ -42,12 +43,15 @@ export default function NavBar(props) {
 		)
 	}
 	return(
-		<Navbar collapseOnSelect expand="lg" bg="transparent" variant="light">
+		<Navbar collapseOnSelect expand="lg" variant="dark" className="colorNav">
 				<Navbar.Brand href="/">Matchandate</Navbar.Brand>
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav className="mr-auto"></Nav>
 					<Nav>
+						<Nav.Link>
+							<Brightness7Icon/>
+						</Nav.Link>
 						<Nav.Link href="/profile">
 							<Button variant="contained" color="primary">Profile</Button>
 						</Nav.Link>

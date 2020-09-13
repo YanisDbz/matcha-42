@@ -64,7 +64,7 @@ export default function RegisterLogin(props) {
 			</Modal.Header>
 			<Modal.Body>
 				<Form className="registerform" onSubmit={handleSubmit}>
-					<Form.Group controlId="email">
+					<Form.Group>
 						<Form.Label htmlFor="email">Email</Form.Label>
 						<Form.Control
 							type="email"
@@ -75,7 +75,7 @@ export default function RegisterLogin(props) {
 						/>
 						<Form.Text className="text-muted">any error</Form.Text>
 					</Form.Group>
-					<Form.Group controlId="password">
+					<Form.Group>
 						<Form.Label htmlFor="password">Password</Form.Label>
 						<Form.Control
 							type="password"

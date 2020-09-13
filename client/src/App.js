@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
-import NavBar from "./component/NavBar";
-import Navigation from "./component/Navigation"
-import Loading from "./component/Pages/LoadingPage"
+import NavBar from "./component/Navbar/NavBar";
+import Navigation from "./component/Navigation/Navigation"
 import Cookie from "js-cookie"
 import axios from "axios"
 import "./App.css";
@@ -25,7 +24,7 @@ function App() {
 	
 	return (
 		<React.Fragment>
-				<div className="App">
+			<div className="App">
 				<header className="NavHeader">
 				    <NavBar user={user} logged={logged} />
 				</header>
