@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios'
 import Cookie from "js-cookie"
 import Button from '@material-ui/core/Button';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import ModalEdit from "../ModalEditProfil"
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,6 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import SendIcon from '@material-ui/icons/Send';
+import { NotificationContainer,NotificationManager} from "react-notifications";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -33,10 +34,19 @@ export default function FormDialog({openDialog, handleCloseDialog}) {
         const formData = new FormData();
         formData.append('bio', Bio);
         axios.post('/user/edit/bio', formData).then((res) => {
-            console.log(res.data);
+            if(res.data.success === true){
+                NotificationManager.success("Biographie is update", "Success");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000);
+            } else {
+                NotificationManager.error(`${res.data.error}`, "Error");
+            }
         })
     }
   return (
+    <React.Fragment>
+        <NotificationContainer/>
       <Dialog open={openDialog} onClose={handleCloseDialog} aria-labelledby="form-dialog-title">
         <form onSubmit={handleSubmit} autoComplete="off">
             <DialogTitle id="form-dialog-title">Biographie</DialogTitle>
@@ -59,11 +69,12 @@ export default function FormDialog({openDialog, handleCloseDialog}) {
                 <Button onClick={handleCloseDialog} color="primary">
                     Cancel
                 </Button>
-                <Button className={classes.button} type="submit" color="secondary" endIcon={<SendIcon></SendIcon>}>
+                <Button className={classes.button} type="submit" onClick={handleCloseDialog} color="secondary" endIcon={<SendIcon></SendIcon>}>
                     Update
                 </Button>
                 </DialogActions>
             </form>
       </Dialog>
+    </React.Fragment>
   );
 }

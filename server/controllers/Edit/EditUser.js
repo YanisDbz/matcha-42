@@ -1,7 +1,8 @@
+const editBio = require("./Bio/Bio")
+
 const editUser = (req, res) => {
     if(req.params.slug === 'bio'){
-        console.log(req.body.bio)
-        return res.json("ok")
+        editBio(req, res)
     }
 }
 

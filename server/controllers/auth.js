@@ -107,10 +107,11 @@ exports.register = (req, res) => {
 					(error, results) => {
 						if (error) {
 							console.error(error);
+							return error
 						} else {
 							console.log(results);
 							sendmailActivate(email, "Activation de compte", activate_token)
-							res.json({
+							return res.json({
 								success: true,
 								message: "User Registered",
 							});
