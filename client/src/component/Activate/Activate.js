@@ -3,7 +3,6 @@ import axios from "axios"
 import { useLocation } from "react-router";
 import { NotificationContainer,NotificationManager} from "react-notifications";
 
-axios.defaults.baseURL = "http://localhost:4000";
 
 export default function Activate(){
   const url = useLocation()

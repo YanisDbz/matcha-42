@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ModalEditProfil({user, open, handleClose}) {
+export default function ModalEditProfil({user, userImg ,open, handleClose}) {
     const [openDialog, setOpenDialog] = useState(false);
 
     const handleOpen = () => {
@@ -71,7 +71,7 @@ export default function ModalEditProfil({user, open, handleClose}) {
                             </Typography>
                         </div>
                         <div className={classes.modalGrid}>
-                           <ProfilImgForm user={user}/>
+                           <ProfilImgForm userImg={userImg} user={user}/>
                         </div>
                         <div className={classes.modalGrid}>
                             <div className="modalEdit">
@@ -84,7 +84,7 @@ export default function ModalEditProfil({user, open, handleClose}) {
                                 <BioForm handleCloseDialog={handleCloseDialog} openDialog={openDialog}/>
                         </div>
                         <div className={classes.modalGrid}>
-                            <UserImgForm user={user}/>
+                            <UserImgForm userImg={userImg}/>
                         </div>
                     </div>
                 </Fade>

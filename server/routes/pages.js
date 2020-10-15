@@ -1,5 +1,6 @@
 const express = require('express')
 const activateController = require('../controllers/activateUser')
+const deleteUserImage = require('../controllers/deleteUserImg')
 const getDataFromCookie = require('../controllers/cookieData')
 const getUserImage = require('../controllers/userImage')
 const getTagData = require('../controllers/tagData')
@@ -31,5 +32,6 @@ router.post('/verify',[
 router.post('/user/tag', getTagData)
 router.post('/user/getimage', getUserImage)
 router.post('/user/edit/:slug', editUser)
+router.post('/user/delete/image', deleteUserImage)
 
 module.exports = router

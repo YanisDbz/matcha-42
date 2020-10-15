@@ -2,6 +2,19 @@ const connection= require("../config/db")
 const bcrypt = require("bcrypt");
 
 
+const setUserImg = (user_id, imgid, imgsrc) => {
+  connection.query(`UPDATE user_image SET ${imgid} = ? where user_id = ?`,
+  [imgsrc, user_id], (error, results) =>{
+    if(error) {
+      console.log(error);
+      throw error
+    } else {
+       return true
+    }
+  })
+}
+
+
 const accountactivated = (email) => {
   connection.query("UPDATE user SET ? WHERE email = ?", 
   [{activate: 1, activate_token: null}, email], (error, results) => {
@@ -9,7 +22,7 @@ const accountactivated = (email) => {
       console.log("accountacvited error" + error)
       throw error
     } else {
-      console.log("Update user activated success")
+       return true
     }
   })
 }
@@ -22,6 +35,7 @@ const updateSetPwdToken = (token, email) => {
       throw error
     } else {
       console.log("Password token updated")
+      return true
     }
   })
 }
@@ -57,6 +71,7 @@ const updateSetNewPassword = (password, email) => {
         console.log("New Password change error" + error)
       } else {
         console.log("Password changed success")
+        return true
       }
     })
   });
@@ -72,4 +87,4 @@ const getAge = (dateString) => {
   }
   return age;
 }
-module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData }
+module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData, setUserImg}

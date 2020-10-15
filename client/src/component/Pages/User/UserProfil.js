@@ -1,5 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import Cookie from "js-cookie";
 import TagUSer from './Tags/Tag'
 import TabPanel from './Tab/Tabs'
 import Avatar from '@material-ui/core/Avatar';
@@ -25,9 +27,25 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function UserProfile(props) {
+	const cookie = Cookie.get("login")
+	const [userImg, setUserImg] = useState([])
 	const classes = useStyles();
 	const user =  props.user
 
+	useEffect(() => {
+		axios.post('/user/getimage', cookie)
+	   .then((res) => {
+		 if(res.data.success === true){
+		   setUserImg([
+			 {id: '1', img: res.data.img1, name: 'img1'},
+			 {id: '2', img: res.data.img2, name: 'img2'},
+			 {id: '3', img: res.data.img3, name: 'img3'},
+			 {id: '4', img: res.data.img4, name: 'img4'},
+			 {id: '5', img: res.data.img5, name: 'img5'},
+		   ])
+		 }
+	   })
+	 }, [])
 	return (
  		 <Container fixed>
 			 <div className="profil-container">
@@ -46,7 +64,7 @@ export default function UserProfile(props) {
 						<TagUSer/>
 					</Grid>
 					<Grid item xs={6}>
-						<TabPanel user={user}/>
+						<TabPanel user={user} userImg={userImg}/>
 					</Grid>
 					<Grid item xs={3}>
 					<List className={classes.list}>
