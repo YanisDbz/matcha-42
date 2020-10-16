@@ -25,7 +25,7 @@ app.use('/auth', require('./routes/auth'))
 
 
 /* Server */
-const port = 8080
+const port = 4000
 app.listen(port, () => {
   console.log(`App listening in port ${port}`)
 })

@@ -34,7 +34,7 @@ export default function TagUser(){
     ])
 
     return(
-            <Paper variant="outlined" square component="ul" className={classes.root}>
+             <Paper variant="outlined" square component="span" className={classes.root}>
                 {
                     tagData.map((data) => {
                         return (
@@ -49,5 +49,5 @@ export default function TagUser(){
                     })
                 }
             </Paper>
-    )
+     )
 }

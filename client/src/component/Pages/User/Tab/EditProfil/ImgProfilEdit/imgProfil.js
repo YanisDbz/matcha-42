@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     display: 'flex',
     justifyContent: "space-between",
+    textAlign: 'center'
   },
   appBar: {
     position: 'relative',
@@ -65,9 +66,9 @@ function FormImgProfil({userImg, open, handleClose}) {
         </AppBar>
         <div className={classes.root}>
         <GridList cellHeight={300} className={classes.gridList} cols={3} style={{ height: 'auto' }}>
-          {userImg.map((tile) => (
-            <GridListTile key={tile.id} cols={1}>
-              <img src={tile.img} alt={tile.name} />
+          {userImg.map((item) => (
+            <GridListTile key={item.id} cols={1}>
+              <img src={item.img} alt={item.name} />
             </GridListTile>
           ))}
         </GridList>

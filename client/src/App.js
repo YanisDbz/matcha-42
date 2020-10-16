@@ -5,7 +5,7 @@ import Cookie from "js-cookie"
 import axios from "axios"
 import "./App.css";
 
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "http://localhost:4000";
 
 function App() {
 	const [user, setUser] = useState({})

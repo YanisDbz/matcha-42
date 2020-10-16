@@ -3,12 +3,51 @@ import ModalEdit from './EditProfil/ModalEditProfil'
 import { makeStyles } from '@material-ui/core/styles';
 import TabList from '@material-ui/lab/TabList';
 import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TabContext from '@material-ui/lab/TabContext';
-import TabPanel from '@material-ui/lab/TabPanel';
 import ImageIcon from '@material-ui/icons/Image';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import EditIcon from '@material-ui/icons/Edit';
+import TagUser from '../Tags/Tag';
+
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`scrollable-auto-tabpanel-${index}`}
+        aria-labelledby={`scrollable-auto-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            {children}
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  
+  function a11yProps(index) {
+    return {
+      id: `scrollable-auto-tab-${index}`,
+      'aria-controls': `scrollable-auto-tabpanel-${index}`,
+    };
+  }
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -16,11 +55,23 @@ const useStyles = makeStyles((theme) => ({
         color: '#fff',
 		backgroundColor: '#333'
     },
+    root: {
+        flexGrow: 1,
+        width: '100%',
+        height: '100%',
+        color: '#fff',
+        backgroundColor: '#333'
+    },
+    color: {
+        textAlign: 'center',
+        color: '#fff',
+        backgroundColor: '#333'
+    },
 }));
 
-export default function Tabs({user, userImg}){
+export default function TabUser({user, userImg}){
     const classes = useStyles();
-    const [value, setValue] = useState('1');
+    const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -29,14 +80,58 @@ export default function Tabs({user, userImg}){
 
     const handleClose = () => {
         setOpen(false);
-        setValue('1')
+        setValue(0)
     };
 
     const handleChange = (event, newValue) => {
 		setValue(newValue);
-	};
+    };
     return(
-            <React.Fragment>
+        <React.Fragment>
+            <ModalEdit userImg={userImg} user={user} open={open} handleClose={handleClose}/>
+        <div className={classes.root}>
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="secondary"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
+                    className={classes.color}
+                >
+                    <Tab label="Recents Traffic" {...a11yProps(0)} />
+                    <Tab label="Gallery" {...a11yProps(1)} />
+                    <Tab label="Blocked People" {...a11yProps(2)} />
+                    <Tab label="Tags" {...a11yProps(3)} />
+                    <Tab label="Edit Profil" {...a11yProps(4)} onClick={handleOpen} />
+                    <Tab label="Profil Settings" {...a11yProps(5)} />
+                    
+                </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+                   
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                Item Two
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                <TagUser/>
+            </TabPanel>
+            <TabPanel value={value} index={5}>
+                oeoe
+            </TabPanel>
+            
+        </div>
+        </React.Fragment>
+        )
+}
+
+
+/* 
+ <React.Fragment>
                 <ModalEdit userImg={userImg} user={user} open={open} handleClose={handleClose}/>
                 <TabContext value={value}>
                     <Paper square className={classes.paper}>
@@ -50,5 +145,4 @@ export default function Tabs({user, userImg}){
                     </TabPanel>
                 </TabContext>
             </React.Fragment>
-        )
-}
+*/
