@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
+import Axios from 'axios';
+import { NotificationContainer,NotificationManager} from "react-notifications";
 
 const useStyles = makeStyles((theme) => ({
   editAvatar: {
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     position: 'relative',
+    backgroundColor: '#333'
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -39,6 +42,13 @@ const useStyles = makeStyles((theme) => ({
     width: 700,
     height: 650,
   },
+  gridListImage: {
+    "&:hover": {
+      filter: 'brightness(1.3)',
+      cursor: 'pointer',
+      transform: 'scale(0.9)'
+    }
+  }
 }))
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -48,9 +58,26 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function FormImgProfil({userImg, open, handleClose}) {
   const classes = useStyles();
 
+  const handleSubmit = (img, name) => {
+    const formData = new FormData();
+    formData.append('imageName', img);
+    formData.append('imageId', name);
+    Axios.post('/user/edit/imgprofil', formData).then((res) => {
+      if(res.data.success === true){
+        NotificationManager.success("Image profil has been updated", "Success !")
+        setTimeout(() => {
+            window.location.reload()
+        }, 1000);
+      } else {
+        NotificationContainer.error("Error occurred from our server try later", "Oups :'(")
+      }
+    })
+  }
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <NotificationContainer/>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -59,18 +86,19 @@ function FormImgProfil({userImg, open, handleClose}) {
             <Typography variant="h6" className={classes.title}>
               Change Profil Picture
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
         <div className={classes.root}>
         <GridList cellHeight={300} className={classes.gridList} cols={3} style={{ height: 'auto' }}>
-          {userImg.map((item) => (
-            <GridListTile key={item.id} cols={1}>
-              <img src={item.img} alt={item.name} />
-            </GridListTile>
-          ))}
+          {userImg.map((item) => {
+            if(item.img){
+              return(
+                <GridListTile onClick={() => handleSubmit(item.img, item.name)} className={classes.gridListImage} key={item.id} cols={1}>
+                  <img src={item.img} alt={item.name} />
+                </GridListTile>
+              )
+            }
+          })}
         </GridList>
     </div>
       </Dialog>
@@ -91,12 +119,10 @@ export default function ImgProfil({user, userImg}) {
   };
   return(
     <React.Fragment>
-      <form autoComplete="off">
-      <div className="modalEdit">
+       <div className="modalEdit">
           <h6>Photo De profil</h6>
           <Button onClick={handleClickOpen} variant="contained">Modifier</Button>
       </div>
-      </form>
       <Avatar className={classes.editAvatar} alt={user.firstname + ' ' + user.lastname} src={user.imgprofil}>{user.firstname}</Avatar>
       <FormImgProfil userImg={userImg} open={open} handleClose={handleClose}/>
     </React.Fragment>

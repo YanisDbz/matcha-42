@@ -14,6 +14,44 @@ const setUserImg = (user_id, imgid, imgsrc) => {
   })
 }
 
+const updateProfilImage = (user_id, imgsrc) => {
+  connection.query(`UPDATE user SET ? where id = ?`,
+  [{imgprofil: imgsrc}, user_id], (error, results) => {
+    if (error) {
+      console.log(error)
+      return false
+    } else {
+      console.log("Img Profil updated")
+      return true
+    }
+  })
+}
+
+const updateUserGender = (user_id, gender) => {
+  connection.query('UPDATE user SET ? where id = ?', 
+  [{gender: gender}, user_id], (error, results) => {
+    if(error){
+      console.log(error)
+      return false
+    } else {
+      console.log("User Gender updated")
+      return true
+    }
+  })
+}
+
+const updateUserOrientation = (user_id, orientation) => {
+  connection.query('UPDATE user SET ? where id = ?', 
+  [{orientation: orientation}, user_id], (error, results) => {
+    if(error){
+      console.log(error)
+      return false
+    } else {
+      console.log("User Orientation updated")
+      return true
+    }
+  })
+}
 
 const accountactivated = (email) => {
   connection.query("UPDATE user SET ? WHERE email = ?", 
@@ -87,4 +125,4 @@ const getAge = (dateString) => {
   }
   return age;
 }
-module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData, setUserImg}
+module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData, setUserImg, updateProfilImage, updateUserGender, updateUserOrientation}

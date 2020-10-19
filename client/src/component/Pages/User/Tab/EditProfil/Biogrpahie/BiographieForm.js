@@ -40,7 +40,7 @@ export default function FormDialog({openDialog, handleCloseDialog}) {
                     window.location.reload()
                 }, 1000);
             } else {
-                NotificationManager.error(`${res.data.error}`, "Error");
+                NotificationManager.error(`${res.data.error}`, "Oups :'(");
             }
         })
     }

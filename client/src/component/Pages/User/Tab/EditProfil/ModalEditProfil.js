@@ -8,6 +8,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import GenderForm from './Gender/Gender'
+import OrientationForm from './Orientation/Orientation'
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -85,6 +87,12 @@ export default function ModalEditProfil({user, userImg ,open, handleClose}) {
                         </div>
                         <div className={classes.modalGrid}>
                             <UserImgForm userImg={userImg}/>
+                        </div>
+                        <div className={classes.modalGrid}>
+                           <GenderForm user={user}/>
+                        </div>
+                        <div className={classes.modalGrid}>
+                           <OrientationForm user={user}/>
                         </div>
                     </div>
                 </Fade>
