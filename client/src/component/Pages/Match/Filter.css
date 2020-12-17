@@ -1,0 +1,22 @@
+.sort-icon {
+    position: relative;
+    left: 12px;
+    height: 25px;
+    width: 25px;
+  }
+  .sort .btn , .filter-mobile .btn{
+    width: 120px;
+    height: 40px;
+    margin: 5px;
+   }
+  .left-block .btn:hover, .filter-mobile .btn:hover {
+    background-color: #9f6ce0;
+  }
+  .sort .btn .btn-primary:hover {
+    background-color: #9f6ce0;
+  }
+  .sort .btn-primary:focus {
+    background-color: #cda7ff !important;
+    border-color: none !important;
+    box-shadow: none;
+  }

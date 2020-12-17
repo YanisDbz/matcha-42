@@ -5,6 +5,7 @@ import {TextField, FormControl, InputLabel, Select, MenuItem, makeStyles, CardMe
 import { NotificationContainer,NotificationManager,} from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import axios from "axios"
+import Navbar from '../../Navbar/NavBar'
 
 const options = [
     { value: '1', label: 'Musique' },
@@ -15,7 +16,7 @@ const options = [
     { value: '6', label: 'Voyage' },
     { value: '7', label: 'Photo' },
     { value: '8', label: 'Animaux' },
-    { value: '9', label: 'Cuisine'},
+    { value: '9', label: 'Informatique'},
     { value: '10', label: 'Sortie'},
 ];
 
@@ -108,6 +109,8 @@ export default function Verify(props) {
     }
     
     return (
+        <>
+            <Navbar />
         <div className="registerform" style={{ paddingTop: '5rem'}}>
             <NotificationContainer />
            <form  className={classes.spacing}>
@@ -189,5 +192,6 @@ export default function Verify(props) {
                     />
                 </Card> : ''}
         </div>
+        </>
     )
 }

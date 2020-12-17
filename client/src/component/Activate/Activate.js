@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import axios from "axios"
 import { useLocation } from "react-router";
 import { NotificationContainer,NotificationManager} from "react-notifications";
@@ -7,6 +7,8 @@ import { NotificationContainer,NotificationManager} from "react-notifications";
 export default function Activate(){
   const url = useLocation()
   const [error, setError] = useState('')
+  
+  useEffect(() => {
     axios
     .post("/activate" + url.search)
     .then((res) => {
@@ -24,6 +26,7 @@ export default function Activate(){
     .catch((error) => {
       console.log(error);
     });
+  }, [])
   return (
     <div className="route">
        {error ? <h1>{error}</h1> : <h1>Success</h1>}

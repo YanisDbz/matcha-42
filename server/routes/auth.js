@@ -16,4 +16,5 @@ router.post('/login', [
   check('password').notEmpty().withMessage('Password is required')
 ],
 authController.login)
+router.post('/logout', authController.logout)
 module.exports = router

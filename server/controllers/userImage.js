@@ -8,17 +8,24 @@ const getUserImage = (req, res) => {
     const decode = jwt.verify(jwt_token, process.env.JWT_SECRET)
     user_id = decode.id
     connection.query("SELECT * FROM user_image WHERE user_id = ?", [user_id], (error, results) => {
-      if(error) {
-        console.log(error)
-        return error
-      } else {        
+      if(results[0]){
         return res.json({
           success: true,
+          id_success: 1,
           img1: results[0].img1,
           img2: results[0].img2,
           img3: results[0].img3,
           img4: results[0].img4,
           img5: results[0].img5
+        })
+      } else if(error) {
+        return res.json({
+          success: false
+        })
+      } else {
+        return res.json({
+          success: true,
+          id_success: 2,
         })
       }
     })

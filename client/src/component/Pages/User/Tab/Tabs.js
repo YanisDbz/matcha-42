@@ -1,20 +1,14 @@
 import React, { useState } from 'react'
 import ModalEdit from './EditProfil/ModalEditProfil'
+import Settings from './EditProfil/Settings/Settings'
 import { makeStyles } from '@material-ui/core/styles';
-import TabList from '@material-ui/lab/TabList';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import TabContext from '@material-ui/lab/TabContext';
-import ImageIcon from '@material-ui/icons/Image';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import EditIcon from '@material-ui/icons/Edit';
-import TagUser from '../Tags/Tag';
-
+import TagUser from './Tags/Tag';
+import History from './History/History'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -57,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         flexGrow: 1,
-        width: '100%',
+        width: '1000px',
         height: '100%',
         color: '#fff',
         backgroundColor: '#333'
@@ -100,8 +94,8 @@ export default function TabUser({user, userImg}){
                     aria-label="scrollable auto tabs example"
                     className={classes.color}
                 >
-                    <Tab label="Recents Traffic" {...a11yProps(0)} />
-                    <Tab label="Gallery" {...a11yProps(1)} />
+                    <Tab label="My Match" {...a11yProps(0)} />
+                    <Tab label="History" {...a11yProps(1)} />
                     <Tab label="Blocked People" {...a11yProps(2)} />
                     <Tab label="Tags" {...a11yProps(3)} />
                     <Tab label="Edit Profil" {...a11yProps(4)} onClick={handleOpen} />
@@ -110,10 +104,10 @@ export default function TabUser({user, userImg}){
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                   
+                   No Match anymor
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                    <History/>
             </TabPanel>
             <TabPanel value={value} index={2}>
             </TabPanel>
@@ -121,7 +115,7 @@ export default function TabUser({user, userImg}){
                 <TagUser/>
             </TabPanel>
             <TabPanel value={value} index={5}>
-                oeoe
+                <Settings user={user}/>
             </TabPanel>
             
         </div>

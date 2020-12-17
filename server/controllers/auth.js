@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto")
 const { validationResult } = require('express-validator');
 const {sendmailActivate} = require('../utils/sendMail')
+const {userOnline, userOffline} = require('../utils/utils')
+
 
 exports.login = (req, res) => {
 	const { email, password } = req.body;
@@ -18,7 +20,7 @@ exports.login = (req, res) => {
 	}
 	connection.query("SELECT * FROM user WHERE email = ?", [email], (error, user) => {
 		if(!user[0]){
-			 res.json({
+			return res.json({
 				success: false,
 				error: "EMAIL_DSNT_EXIST",
 				message: "Email does not exist"
@@ -28,27 +30,26 @@ exports.login = (req, res) => {
 				if(result){
 				  console.log("Login Good Password")
 				  if(user[0].activate != 1){
-					  res.json({
+					 return res.json({
 						  success: false,
 						  error: "USER_NOT_ACTIVATE",
 						  message: "Please check your mail to verify your account"
 					  })
 				  }
 				  console.log(user);
-					const id = user[0].id;
-
-					const token = jwt.sign({ id }, process.env.JWT_SECRET);
-
-					// console.log("The JWT token is : " + token);
-					res.json({
+				  const id = user[0].id;
+				  const token = jwt.sign({ id }, process.env.JWT_SECRET);
+				  if(userOnline(id)){
+					return res.json({
 						success: true,
 						access_token: token,
 						user: user,
 						message: "User Login success"
 					});
+				  }
 				} else {
 				  console.log("Login wrong password")
-				  res.json({
+				  return res.json({
 					success: false,
 					error: "WRONG_PASSWORD",
 					message: "Wrong password"
@@ -122,3 +123,22 @@ exports.register = (req, res) => {
 		}
 	);
 };
+
+exports.logout = (req, res) => {
+	const jwt_token = req.cookies.login
+ 
+	if(jwt_token){
+	   const decode = jwt.verify(jwt_token, process.env.JWT_SECRET)
+	   const user_id = decode.id
+	   if(userOffline(user_id)){
+		   return res.json({
+			   success: true,
+		   })
+	   }
+	} else {
+		return res.json({
+			success: false,
+			error: "USER_NOT_LOGGED"
+		})
+	}
+}

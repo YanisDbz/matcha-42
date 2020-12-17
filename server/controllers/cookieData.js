@@ -11,7 +11,8 @@ const getDataFromCookie = (req, res) => {
       if(results[0]){
         return res.json({
           success: true,
-          user: results[0]
+          user: results[0],
+          user_id: results[0].id,
         })
       }
     })

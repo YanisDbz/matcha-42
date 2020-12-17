@@ -31,6 +31,7 @@ const sendmailActivate = (to, subject, activationtoken) => {
         if (error) {
             console.log(error);
         } else {
+            console.log(info)
             console.log('Email sent: ' + to);
         }
     });
@@ -67,6 +68,7 @@ const sendmailPasswordForgot = (to, subject, activationtoken) => {
         if (error) {
             console.log(error);
         } else {
+            console.log(info)
             console.log('Email sent: ' + to);
         }
     });

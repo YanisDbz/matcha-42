@@ -1,28 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import RegisterForm from "../Auth/RegisterForm";
 import Cookie from "js-cookie"
 import RegisterLogin from "../Auth/RegisterLogin";
-import { Navbar, Nav, Dropdown } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { Button } from "@material-ui/core"
-import Brightness7Icon from '@material-ui/icons/Brightness7';
+import IconButton from '@material-ui/core/IconButton';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import PersonIcon from '@material-ui/icons/Person';
+import Logout from '@material-ui/icons/ExitToApp';
+import axios from "axios"
+import socketIOClient from "socket.io-client";
 
+const socket = socketIOClient("http://localhost:8081")
 
+const handleLogout = (e) => {
+    e.preventDefault();
+    axios.post('/auth/logout').then((res) => {
+      if(res.data.success === true ){
+		socket.on('disconnect')
+        Cookie.remove("login")
+        window.location = "/"
+      }
+    })
+  }
 
-const logout = (e) => {
-	e.preventDefault();
-	Cookie.remove("login")
-	window.location = "/"
-}
-export default function NavBar(props) {
+export default function NavBar() {
 	const [modalLoginShow, setModalLoginShow] = useState();
 	const [modalRegisterShow, setModalRegisterShow] = useState();
-	const user = props.user
-  const islogged = props.logged
+  	const login = Cookie.get("login")
 	
-
-   if(islogged === false)
-	{
+	if(login){
+		return(
+			<header className="NavHeader">
+				<Navbar collapseOnSelect expand="lg" className="colorNav">
+					<Navbar.Brand href="/">Matchandate</Navbar.Brand>
+					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					<Navbar.Collapse id="responsive-navbar-nav">
+						<Nav className="mr-auto"></Nav>
+						<Nav>
+							<Nav.Link href="/match">
+								<Button color="inherit">Match</Button>
+							</Nav.Link>
+							<Nav.Link href="/profile">
+								<Button  to="/profile" color="inherit">Profile</Button>
+							</Nav.Link>
+							<Nav.Link>
+								<Button onClick={handleLogout}  color="inherit">Logout</Button>
+							</Nav.Link>
+						</Nav>
+					</Navbar.Collapse>
+				</Navbar>
+			</header>
+		)
+	} else if(!login){
 		return (
+			<header className="NavHeader">
 			<Navbar collapseOnSelect expand="lg" bg="transparent" variant="light">
 				<Navbar.Brand href="/">Matchandate</Navbar.Brand>
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -40,26 +72,7 @@ export default function NavBar(props) {
 				<RegisterLogin show={modalLoginShow} onHide={() => setModalLoginShow(false)} />
 				<RegisterForm show={modalRegisterShow} onHide={() => setModalRegisterShow(false)} />
 			</Navbar>
+			</header>
 		)
 	}
-	return(
-		<Navbar collapseOnSelect expand="lg" variant="dark" className="colorNav">
-				<Navbar.Brand href="/">Matchandate</Navbar.Brand>
-				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
-				<Navbar.Collapse id="responsive-navbar-nav">
-					<Nav className="mr-auto"></Nav>
-					<Nav>
-						<Nav.Link>
-							<Brightness7Icon/>
-						</Nav.Link>
-						<Nav.Link href="/profile">
-							<Button variant="contained" color="primary">Profile</Button>
-						</Nav.Link>
-						<Nav.Link href="/logout">
-							<Button onClick={logout} variant="contained" color="primary" >Logout</Button>
-						</Nav.Link>
-					</Nav>
-				</Navbar.Collapse>
-			</Navbar>
-	)
 }

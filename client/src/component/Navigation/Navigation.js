@@ -6,19 +6,21 @@ import UserProfile from "../Pages/User/UserProfil";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage"
 import Verify from "../Pages/Verify/Verify"
 import HomePage from "../Pages/HomePage/Home"
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import MatchPage from "../Pages/Match/Match"
+import MatchProfile from "../Pages/Match/MatchProfile"
+import Cookie from "js-cookie"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 
 export default function Navigation(props){
   const user = props.user
-  const islogged = props.logged
+  const islogged = Cookie.get("login")
   
   if(islogged && props.user.verify === 0){
     return(
       <Router>
           <Switch>
             <Route path="/" exact component={HomePage}/>
-            <Route exact path="/profile" component={() => <UserProfile user={user} />} />
             <Route path="/app/verify" component={() => <Verify user={user} />}/>
             <Route component={ErrorPage} />
           </Switch>
@@ -29,8 +31,10 @@ export default function Navigation(props){
     return(
       <Router>
           <Switch>
-            <Route path="/" exact component={HomePage} />
+            <Route path="/" exact component={() => <MatchPage user={user} />} />
             <Route exact path="/profile" component={() => <UserProfile user={user} />} />
+            <Route exact path="/match" component={() => <MatchPage user={user} />} />
+            <Route exact path ="/user/:slug" component={() => <MatchProfile user={user}/>}></Route>
             <Route path="/" component={ErrorPage} />
           </Switch>
       </Router>

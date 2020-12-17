@@ -1,5 +1,6 @@
 const connection= require("../config/db")
 const bcrypt = require("bcrypt");
+const { connect } = require("../config/db");
 
 
 const setUserImg = (user_id, imgid, imgsrc) => {
@@ -90,6 +91,99 @@ const setProfilData = (path_img, user_id, age, gender, orientation) => {
     }
   })
 }
+
+const SetProfilDataUserImage = (path_img, user_id) => {
+  connection.query("INSERT INTO user_image SET ?",[
+    {img1: path_img, user_id: user_id}
+  ], (error, results) => {
+    if(error){
+      console.log(error)
+      return error
+    } else {
+      return true
+    }
+  })
+}
+
+const selectMatch = async (user_id, gender, orientation) => {
+  const promise = new Promise((resolve, reject) => {
+    if (orientation === "Hetero") {
+      const query_if_interests = `SELECT count(*) AS cntinterests, b.*
+      from user_tag a INNER JOIN user b ON b.id = a.user_id
+      WHERE a.tag_id IN (SELECT tag_id FROM user_tag WHERE user_id = '${user_id}') 
+      AND a.user_id != '${user_id}'
+      AND b.gender != '${gender}'
+      AND b.orientation != 'Homo'
+      GROUP BY a.user_id
+      ORDER BY cntinterests DESC`;
+      connection.query(query_if_interests, (err, result) => {
+        if (err) return reject(err);
+        return resolve(result);
+      });
+    } else if (orientation === "Homo") {
+      const query_if_interests = `SELECT count(*) AS cntinterests, b.*
+      from user_tag a INNER JOIN user b ON b.id = a.user_id
+      WHERE a.tag_id IN (SELECT tag_id FROM user_tag WHERE user_id = '${user_id}') 
+      AND a.user_id != '${user_id}'
+      AND b.gender != '${gender}'
+      AND b.orientation != 'Hetero'
+      GROUP BY a.user_id
+      ORDER BY cntinterests DESC`;
+
+      connection.query(query_if_interests, (err, result) => {
+        if (err) return reject(err);
+        return resolve(result);
+      });
+    } else if (orientation === "Bi") {
+      const query_if_interests = `SELECT count(*) AS cntinterests, b.*
+      from user_tag a INNER JOIN user b ON b.id = a.user_id
+      WHERE a.tag_id IN (SELECT tag_id FROM user_tag WHERE user_id = '${user_id}') 
+      AND a.user_id != '${user_id}'
+      AND ((b.gender = '${gender}' AND b.orientation != 'Hetero') 
+      OR (b.gender != '${gender}' AND  b.orientation != 'Homo'))  
+      GROUP BY a.user_id
+      ORDER BY cntinterests DESC`;
+
+      connection.query(query_if_interests, (err, result) => {
+        if (err) return reject(err);
+        return resolve(result);
+      });
+    }
+  });
+  return promise;
+};
+
+
+const setMatchLike = (user_id, match_id) => {
+ const promise = new Promise((resolve, reject) => {
+   connection.query('INSERT INTO match_like(user_id, match_id) VALUES(?, ?)', [user_id, match_id], (err, results) => {
+     if(err) return reject(err);
+     return resolve(results)
+   })
+ })
+ return promise;
+}
+
+const setMatchUnlike = (user_id, match_id) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('DELETE FROM match_like WHERE user_id = ? AND match_id = ?', [user_id, match_id], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+const checkLike =  async (user_id, match_id) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT id FROM match_like WHERE user_id = ? AND match_id = ?', [user_id, match_id], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+}
+
 const setUserTag = (user_id, value) => {
   connection.query(`INSERT INTO user_tag(user_id, tag_id) VALUES(?, ?)`, [user_id, value], (error, results) => {
     if(error){
@@ -101,12 +195,14 @@ const setUserTag = (user_id, value) => {
     }
   })
 }
+
 const updateSetNewPassword = (password, email) => {
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query("UPDATE user SET ? WHERE email = ?",
     [{password: hash, password_token: null}, email], (error, results) => {
       if(error) {
         console.log("New Password change error" + error)
+        throw error
       } else {
         console.log("Password changed success")
         return true
@@ -115,6 +211,93 @@ const updateSetNewPassword = (password, email) => {
   });
 }
 
+const updateSetEditNewPassword = (password, user_id) => {
+  bcrypt.hash(password, 10, function(err, hash) {
+    connection.query("UPDATE user SET ? WHERE id = ?",
+    [{password: hash}, user_id], (error, results) => {
+      if(error) {
+        console.log("New Password change error" + error)
+        throw error
+      } else {
+        console.log("Password changed success")
+        return true
+      }
+    })
+  });
+}
+
+const updateSetNewEmail = (email, user_id) => {
+  connection.query("UPDATE user SET ? where id = ?", 
+  [{email: email}, user_id], (error, results) => {
+    if(error){
+      throw error
+    } else {
+      return true
+    }
+  })
+}
+
+const updateSetNewFirstname = (firstname, user_id) => {
+  connection.query("UPDATE user SET ? where id = ?", 
+  [{firstname: firstname}, user_id], (error, results) => {
+    if(error){
+      throw error
+    } else {
+      return true
+    }
+  })
+}
+
+
+const updateSetNewLastname = (lastname, user_id) => {
+  connection.query("UPDATE user SET ? where id = ?", 
+  [{lastname: lastname}, user_id], (error, results) => {
+    if(error){
+      throw error
+    } else {
+      return true
+    }
+  })
+}
+
+const UpdateAddTag = (tag_id, user_id, callback) => {
+  connection.query("INSERT INTO user_tag(user_id, tag_id) VALUES(?, ?)", 
+  [user_id, tag_id], (error, results) => {
+    if(error){
+       return callback(false)
+    } else {
+      return callback(true)
+    }
+  })
+}
+
+const UpdateRemoveTag = (tag_id, user_id, callback) => {
+  connection.query("DELETE FROM user_tag WHERE user_id = ? AND tag_id = ?", 
+  [user_id, tag_id], (error, results) => {
+    if(error){
+       return callback(false)
+    } else {
+      return callback(true)
+    }
+  })
+}
+const CheckPassword = (password, user_id, callback) => {
+  connection.query("SELECT password FROM user WHERE id = ?", [user_id], (error, results) => {
+    if(error){
+      throw error
+    } else {
+      bcrypt.compare(password, results[0].password).then((result)=>{
+        if(result){
+          console.log("good password")
+          return callback(true)
+        } else {
+          console.log("wrong")
+          return callback(false)
+        }
+      })
+    }
+  })
+}
 const getAge = (dateString) => {
   var today = new Date();
   var birthDate = new Date(dateString);
@@ -125,4 +308,123 @@ const getAge = (dateString) => {
   }
   return age;
 }
-module.exports = { accountactivated, updateSetPwdToken, updateSetNewPassword, getAge, setUserTag, setProfilData, setUserImg, updateProfilImage, updateUserGender, updateUserOrientation}
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+function setUserPos(user_id, latitude, longitude) {
+  const promise = new Promise((resolve, reject) => {
+
+    connection.query('UPDATE user SET ? WHERE id = ?', [{
+      latitude: latitude, longitude: longitude
+    }, user_id], (err, results) => {
+      if(err) return reject(err)
+      if(results){
+        resolve(results)
+        return true
+      }
+    })
+  })
+
+  return promise;
+}
+
+function userOffline(user_id) {
+  const promise = new Promise((resolve, reject) => {
+
+    connection.query('UPDATE user SET ? WHERE id = ?', [{
+      online: 0
+    }, user_id], (err, results) => {
+      if(err) return reject(err)
+      if(results){
+        resolve(results)
+        return true
+      }
+    })
+  })
+
+  return promise;
+}
+
+function userOnline(user_id) {
+  const promise = new Promise((resolve, reject) => {
+
+    connection.query('UPDATE user SET ? WHERE id = ?', [{
+      online: 1
+    }, user_id], (err, results) => {
+      if(err) return reject(err)
+      if(results){
+        resolve(results)
+        return true
+      }
+    })
+  })
+
+  return promise;
+}
+
+
+function getHistory(user_id) {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user JOIN match_like ON match_like.match_id = user.id WHERE match_like.user_id = ?', 
+    [user_id], (err, result) => {
+      if(err){ return reject(err) }
+      return resolve(result)
+    })
+  })
+
+  return promise;
+}
+
+function getUserData(user_id) {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user WHERE id = ?', 
+    [user_id], (err, result) => {
+      if(err){ return reject(err) }
+      return resolve(result)
+    })
+  })
+
+  return promise;
+}
+module.exports = { 
+  accountactivated, 
+  updateSetPwdToken, 
+  updateSetNewPassword, 
+  getAge, 
+  setUserTag, 
+  setProfilData, 
+  setUserImg, 
+  updateProfilImage, 
+  updateUserGender, 
+  updateUserOrientation, 
+  CheckPassword, 
+  updateSetNewEmail, 
+  updateSetNewLastname, 
+  updateSetNewFirstname, 
+  updateSetEditNewPassword, 
+  UpdateAddTag, 
+  UpdateRemoveTag, 
+  SetProfilDataUserImage, 
+  selectMatch,
+  setMatchLike,
+  checkLike,
+  setMatchUnlike,
+  setUserPos,
+  getDistance,
+  userOffline,
+  userOnline,
+  getHistory,
+  getUserData
+}

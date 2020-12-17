@@ -63,53 +63,53 @@ export default function RegisterForm(props) {
 			<Modal.Body>
 				<Form className="registerform" onSubmit={handleSubmit}>
 				{error ? <Form.Text className="errorText">{error}</Form.Text> : ''}
-					<Form.Group controlId="firstname">
+					<Form.Group>
 						<Form.Label htmlFor="firstname">First Name</Form.Label>
 						<Form.Control
 							type="text"
 							name="firstname"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Enter Firstname"
 							value={users.firstname}
 						/>
 					</Form.Group>
-					<Form.Group controlId="lastname">
+					<Form.Group>
 						<Form.Label htmlFor="lastname">Last Name</Form.Label>
 						<Form.Control
 							type="text"
 							name="lastname"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Enter Lastname"
 							value={users.lastname}
 						/>
 					</Form.Group>
-					<Form.Group controlId="email">
+					<Form.Group>
 						<Form.Label htmlFor="email">Email</Form.Label>
 						<Form.Control
 							type="email"
 							name="email"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Enter Email"
 							value={users.email}
 						/>
 					</Form.Group>
-					<Form.Group controlId="password">
+					<Form.Group>
 						<Form.Label htmlFor="password">Password</Form.Label>
 						<Form.Control
 							type="password"
 							name="password"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Enter Password"
 							value={users.password}
 						/>
 					</Form.Group>
-					<Form.Group controlId="passwordConfirm">
+					<Form.Group>
 						<Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
 						<Form.Control
 							type="password"
 							name="passwordConfirm"
 							onChange={handleChange}
-							placeholder="Enter email"
+							placeholder="Confirm Password"
 							value={users.passwordConfirm}
 						/>
 					</Form.Group>

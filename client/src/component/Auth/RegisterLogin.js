@@ -28,7 +28,7 @@ export default function RegisterLogin(props) {
 				if (res.data.success === true) {
 					NotificationManager.success(`Content de vous revoir ${users.email}`, `Connexion reussi`);
 					Cookie.set("login", res.data.access_token, {expires: 7})
-					if(res.data.user.verify === 1) {
+					if(res.data.user[0].verify === 0) {
 						setTimeout(() => {
 							window.location="/app/verify"
 						}, 1000);
