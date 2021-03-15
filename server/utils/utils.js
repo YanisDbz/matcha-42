@@ -1,6 +1,5 @@
 const connection= require("../config/db")
 const bcrypt = require("bcrypt");
-const { connect } = require("../config/db");
 
 
 const setUserImg = (user_id, imgid, imgsrc) => {
@@ -184,6 +183,16 @@ const checkLike =  async (user_id, match_id) => {
   return promise;
 }
 
+const checkBlock =  async (user_id, match_id) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT id FROM match_block WHERE user_id = ? AND match_id = ?', [user_id, match_id], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+}
+
 const setUserTag = (user_id, value) => {
   connection.query(`INSERT INTO user_tag(user_id, tag_id) VALUES(?, ?)`, [user_id, value], (error, results) => {
     if(error){
@@ -341,10 +350,11 @@ function setUserPos(user_id, latitude, longitude) {
 }
 
 function userOffline(user_id) {
+  const today = new Date()
   const promise = new Promise((resolve, reject) => {
 
     connection.query('UPDATE user SET ? WHERE id = ?', [{
-      online: 0
+      online: 0, date_logout: today.getTime()
     }, user_id], (err, results) => {
       if(err) return reject(err)
       if(results){
@@ -375,9 +385,21 @@ function userOnline(user_id) {
 }
 
 
-function getHistory(user_id) {
+function getHistoryLike(user_id) {
   const promise = new Promise((resolve, reject) => {
     connection.query('SELECT * FROM user JOIN match_like ON match_like.match_id = user.id WHERE match_like.user_id = ?', 
+    [user_id], (err, result) => {
+      if(err){ return reject(err) }
+      return resolve(result)
+    })
+  })
+
+  return promise;
+}
+
+function getHistoryBlock(user_id) {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user JOIN match_block ON match_block.match_id = user.id WHERE match_block.user_id = ?', 
     [user_id], (err, result) => {
       if(err){ return reject(err) }
       return resolve(result)
@@ -398,6 +420,58 @@ function getUserData(user_id) {
 
   return promise;
 }
+
+const setMatchBlock = (user_id, match_id) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('INSERT INTO match_block(user_id, match_id) VALUES(?, ?)', [user_id, match_id], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ const setMatchUnBlock = (user_id, match_id) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('DELETE FROM match_block WHERE user_id = ? AND match_id = ?', [user_id, match_id], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ const setNotif = (id_from, id_for, type) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('INSERT INTO notification(id_from, id_for, type) VALUES(?, ?, ?)', [id_from, id_for, type], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ 
+ function getUserImage(user_id) {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user_image WHERE user_id = ?', 
+    [user_id], (err, result) => {
+      if(err){ return reject(err) }
+      return resolve(result)
+    })
+  })
+
+  return promise;
+}
+
+const checkMatch = async (user_id, match_id) => {
+  const check1 = await checkLike(user_id, match_id);
+  const check2 = await checkLike(match_id, user_id);
+  if(check1.length === 1 && check2.length === 1){
+    return true
+  }
+  return false
+ }
 module.exports = { 
   accountactivated, 
   updateSetPwdToken, 
@@ -420,11 +494,18 @@ module.exports = {
   selectMatch,
   setMatchLike,
   checkLike,
+  checkBlock,
   setMatchUnlike,
   setUserPos,
   getDistance,
   userOffline,
   userOnline,
-  getHistory,
-  getUserData
+  getHistoryLike,
+  getHistoryBlock,
+  getUserData,
+  setMatchBlock,
+  setMatchUnBlock,
+  getUserImage,
+  setNotif,
+  checkMatch
 }

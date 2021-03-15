@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Cookie from "js-cookie"
 import axios from "axios"
 import PropTypes from 'prop-types';
@@ -17,6 +17,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
+import Notification from "./Notification"
 
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
@@ -45,6 +46,7 @@ const useStyles = makeStyles(theme => ({
   },
   toolbarButtons: {
     marginLeft: 'auto',
+    display: 'inline-flex'
   },
 
   toolbar: theme.mixins.toolbar,
@@ -81,27 +83,10 @@ function ResponsiveDrawer({
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [notif, setNotif] = useState(false);
   const socket = socketIOClient("http://localhost:8081")
   function handleDrawerToggle() {
       setMobileOpen(!mobileOpen)
   }
-
-  useEffect(() => {
-    const getNotif = async () => {
-        socket.on('get_notif', (data) => {
-            if(data.for === user.id){
-               if(data.type === "like"){
-                   setNotif({
-                       type: data.type,
-                       from:  data.from
-                   })
-               }
-            }
-        })
-    }
-    getNotif()
-}, [notif])
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -234,6 +219,7 @@ return (
             Match And Date
           </Typography>
           <div className={classes.toolbarButtons}>
+            <Notification/>
             <Button component={Link} to="/profile" color="inherit">Profile</Button>
             <Button onClick={handleLogout}  color="inherit">Logout</Button>
           </div>

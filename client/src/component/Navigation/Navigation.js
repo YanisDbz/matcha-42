@@ -31,11 +31,11 @@ export default function Navigation(props){
     return(
       <Router>
           <Switch>
-            <Route path="/" exact component={() => <MatchPage user={user} />} />
+            <Route exact path="/"  component={() => <MatchPage user={user} />} />
             <Route exact path="/profile" component={() => <UserProfile user={user} />} />
             <Route exact path="/match" component={() => <MatchPage user={user} />} />
             <Route exact path ="/user/:slug" component={() => <MatchProfile user={user}/>}></Route>
-            <Route path="/" component={ErrorPage} />
+            <Route component={ErrorPage} />
           </Switch>
       </Router>
     )

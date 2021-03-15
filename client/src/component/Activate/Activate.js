@@ -2,7 +2,7 @@ import React,{useState, useEffect} from "react";
 import axios from "axios"
 import { useLocation } from "react-router";
 import { NotificationContainer,NotificationManager} from "react-notifications";
-
+import Navbar from "../Navbar/NavBar"
 
 export default function Activate(){
   const url = useLocation()
@@ -28,9 +28,12 @@ export default function Activate(){
     });
   }, [])
   return (
+    <>
+    <Navbar/>
     <div className="route">
        {error ? <h1>{error}</h1> : <h1>Success</h1>}
       <NotificationContainer/>
     </div>
+    </>
   )
 }

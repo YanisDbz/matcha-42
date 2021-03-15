@@ -1,23 +1,18 @@
 const jwt = require("jsonwebtoken")
-const {setMatchLike, setNotif, checkMatch} = require("../utils/utils")
+const {setMatchUnBlock} = require("../utils/utils")
 
-const matchLike = (req, res) => {
+const matchUnBlock = (req, res) => {
     const jwt_token = req.cookies.login;
 
     if(jwt_token){
         const {match_id} = req.body;
         const decode = jwt.verify(jwt_token, process.env.JWT_SECRET)
         const user_id = decode.id
-        const result = setMatchLike(user_id, match_id)
-        const check = checkMatch(user_id, match_id)
+        const result = setMatchUnBlock(user_id, match_id)
         if(result){
-            if(check){
-                setNotif(user_id, match_id, "match")
-            }
-            setNotif(user_id, match_id, "like")
             return res.json({
                 success: true,
-                message: "User liked"
+                message: "User Unblocked"
             })
         } else {
             return res.json({
@@ -33,4 +28,4 @@ const matchLike = (req, res) => {
     }
 }
 
-module.exports = matchLike
+module.exports = matchUnBlock

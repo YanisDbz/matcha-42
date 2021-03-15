@@ -76,6 +76,23 @@ const resetUserImage = () => {
         }
     })
 };
+const randomDateLogout = (start, end) => {
+    function addZero(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+    var dateObj = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    var month = dateObj.getUTCMonth() + 1;
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var hours = addZero(dateObj.getHours());
+    var minutes = addZero(dateObj.getUTCMinutes());
+    var seconds = addZero(dateObj.getUTCSeconds());
+
+    return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+};
 
 function randomDate(start, end) {
     var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())),
@@ -130,6 +147,7 @@ const updateTable =  (i) => {
     let bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     let latitude = lat;
     let longitude = lon;
+    let date_logout = randomDateLogout(new Date(2019, 0, 1), new Date(2020, 9, 1))
     if (gender == "Homme") {
         firstname = faker.name.firstName("Homme");
         pic = "men";
@@ -153,6 +171,7 @@ const updateTable =  (i) => {
             imgprofil: `https://randomuser.me/api/portraits/${pic}/${i}.jpg`,
             verify: 1,
             bio: bio,
+            date_logout: date_logout,
             age: age,
             gender: gender,
             orientation: orientation,

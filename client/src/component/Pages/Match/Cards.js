@@ -13,7 +13,6 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Unlike from '@material-ui/icons/Favorite';
 import Like from '@material-ui/icons/FavoriteBorder';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GradeIcon from '@material-ui/icons/Grade';
@@ -65,6 +64,16 @@ const Offline = withStyles((theme) => ({
       animation: '$ripple 1.2s infinite ease-in-out',
       border: '1px solid currentColor',
       content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
     },
   },
 }))(Badge);
@@ -125,15 +134,6 @@ export default function MatchCard({match, user}) {
     })
   }
 
-  const handleUnlike = (match_id) => {
-    const formData = new FormData();
-    formData.append('match_id', match_id)
-    axios.post('/match/unlike', formData).then((res) => {
-      if(res.data.success === true){
-          setLike(false)
-      }
-    })
-  }
   return (
     <React.Fragment>
     {like === false ? 

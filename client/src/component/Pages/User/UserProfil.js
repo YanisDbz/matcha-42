@@ -79,9 +79,9 @@ export default function UserProfile(props) {
 		<Navbar />
 		<Grid container className={classes.root} spacing={2}>
 			<Grid item xs={3}>
-			<Avatar className="profil-avatar" alt={user.firstname + ' ' + user.lastname} src={user.imgprofil}>{user.firstname}</Avatar>
+				<Avatar className="profil-avatar" alt={user.firstname + ' ' + user.lastname} src={user.imgprofil}>{user.firstname}</Avatar>
 			</Grid>
-			<Grid item xs={9}>
+			<Grid item  xs>
  					<TabUser user={user} userImg={userImg}/>
  			</Grid>
 		</Grid>

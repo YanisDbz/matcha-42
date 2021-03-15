@@ -8,8 +8,8 @@ import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import TagUser from './Tags/Tag';
-import History from './History/History'
-
+import HistoryLike from './History/HistoryLike'
+import HistoryBlcok from './History/HistoryBlock'
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -50,11 +50,14 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: '#333'
     },
     root: {
-        flexGrow: 1,
-        width: '1000px',
-        height: '100%',
-        color: '#fff',
-        backgroundColor: '#333'
+      [theme.breakpoints.down("xs")]: {
+        maxWidth: "100%",
+        width: "100%"
+      },
+      flexGrow: 1,
+      height: '100%',
+      color: '#fff',
+      backgroundColor: '#333'
     },
     color: {
         textAlign: 'center',
@@ -95,7 +98,7 @@ export default function TabUser({user, userImg}){
                     className={classes.color}
                 >
                     <Tab label="My Match" {...a11yProps(0)} />
-                    <Tab label="History" {...a11yProps(1)} />
+                    <Tab label="Liked People" {...a11yProps(1)} />
                     <Tab label="Blocked People" {...a11yProps(2)} />
                     <Tab label="Tags" {...a11yProps(3)} />
                     <Tab label="Edit Profil" {...a11yProps(4)} onClick={handleOpen} />
@@ -107,9 +110,10 @@ export default function TabUser({user, userImg}){
                    No Match anymor
             </TabPanel>
             <TabPanel value={value} index={1}>
-                    <History/>
+                    <HistoryLike/>
             </TabPanel>
             <TabPanel value={value} index={2}>
+                <HistoryBlcok/>
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <TagUser/>
