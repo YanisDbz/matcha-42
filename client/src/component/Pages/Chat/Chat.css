@@ -1,0 +1,132 @@
+.contact {
+    margin: 10px;
+    width: 95% !important;
+}
+.contact .form-control{
+    border-radius: 0px !important;
+}
+.contact::placeholder {
+    color: rgb(155, 155, 155);
+}
+.contact:focus {
+    outline: none;
+    border-color: white !important;
+    box-shadow: 0px 0px 10px 0px white !important;
+}
+.contact {
+    height: 90px !important;
+    padding: 16px 90px;
+    color: white;
+}
+
+.contact:hover{
+    cursor: pointer;
+    background-color: red;
+}
+
+.contact-active{
+    height: 90px !important;
+    padding: 16px 90px;
+    color: white;
+    background-color: red;
+}
+
+.contact-mobile {
+    overflow: scroll;
+    max-height: 110px;
+    padding: 25px;
+    flex-direction: column;
+}
+.chat-area {
+   height: 100vh;
+   padding-top: 68px;
+}
+.chat-area-match {
+    height: 90px !important;
+    padding: 16px 30px;
+    background-color: #1c2228;
+    color: rgb(0, 0, 0);
+}
+
+/* CHAT-AREA-TEXT */
+
+.chat-area-text {
+    flex-direction: column-reverse;
+    height: 59vh !important;
+    background-color: black;
+    padding: 50px 40px;
+    overflow-y: scroll;
+}
+
+.chat-area-text-mobile {
+    flex-direction: column-reverse;
+    height: 64vh !important;
+    color: #3b3b3b;
+    padding: 50px 5px;
+    overflow: scroll;
+}
+
+.message-right {
+    background: #11a8ee;
+    border-radius: 10px;
+    padding: 15px;
+    float: right;
+}
+.message-left {
+    display: inline-block;
+    background: rgb(61, 207, 56);
+    border-radius: 10px;
+    padding: 13px 13px 10px 13px;
+}
+.message {
+    margin-bottom: 25px;
+}
+.teste{
+    display: flex;
+}
+
+/* CHAT-AREA-INPUT */
+
+.chat-area-input {
+    display: flex;
+    height: 150px !important;
+    background-color: #1c2228 ;
+    padding: 30px;
+    position: absolute;
+    width: 100% !important;
+}
+.chat-input{
+    width: 100% !important;
+    display: flex;
+}
+.chat-input .form-control {
+    height: 100% !important;
+    border-radius: 10px !important;
+    padding: 20px;
+}
+.chat-area-input .btn{
+    width: 110px;
+    background-color: black;
+    border: none;
+    margin: 0 0 0 20px;
+}
+.chat-message {
+    border-radius: 50px;
+    background-color: black;
+}
+.chat-online {
+    margin-top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgb(44, 255, 44);
+    box-shadow: 0 0 8px 2px rgb(44, 255, 44)
+}
+.chat-offline {
+    margin-top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    box-shadow: 0 0 8px 2px red
+}

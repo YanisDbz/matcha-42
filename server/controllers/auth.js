@@ -133,6 +133,7 @@ exports.logout = (req, res) => {
 	   if(userOffline(user_id)){
 		   return res.json({
 			   success: true,
+			   id: user_id
 		   })
 	   }
 	} else {

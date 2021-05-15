@@ -8,6 +8,7 @@ import Verify from "../Pages/Verify/Verify"
 import HomePage from "../Pages/HomePage/Home"
 import MatchPage from "../Pages/Match/Match"
 import MatchProfile from "../Pages/Match/MatchProfile"
+import Chat from "../Pages/Chat/Chat"
 import Cookie from "js-cookie"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -35,6 +36,7 @@ export default function Navigation(props){
             <Route exact path="/profile" component={() => <UserProfile user={user} />} />
             <Route exact path="/match" component={() => <MatchPage user={user} />} />
             <Route exact path ="/user/:slug" component={() => <MatchProfile user={user}/>}></Route>
+            <Route exact path ="/chat" component={() => <Chat user={user}/>}></Route>
             <Route component={ErrorPage} />
           </Switch>
       </Router>

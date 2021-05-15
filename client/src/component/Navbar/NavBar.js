@@ -4,12 +4,9 @@ import Cookie from "js-cookie"
 import RegisterLogin from "../Auth/RegisterLogin";
 import { Navbar, Nav } from "react-bootstrap";
 import { Button } from "@material-ui/core"
-import IconButton from '@material-ui/core/IconButton';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import PersonIcon from '@material-ui/icons/Person';
-import Logout from '@material-ui/icons/ExitToApp';
 import axios from "axios"
 import socketIOClient from "socket.io-client";
+import Notification from "../Navigation/Notification"
 
 const socket = socketIOClient("http://localhost:8081")
 
@@ -17,7 +14,7 @@ const handleLogout = (e) => {
     e.preventDefault();
     axios.post('/auth/logout').then((res) => {
       if(res.data.success === true ){
-		socket.on('disconnect')
+		socket.emit('logout', res.data.id)
         Cookie.remove("login")
         window.location = "/"
       }
@@ -38,6 +35,7 @@ export default function NavBar() {
 					<Navbar.Collapse id="responsive-navbar-nav">
 						<Nav className="mr-auto"></Nav>
 						<Nav>
+							<Notification/>
 							<Nav.Link href="/match">
 								<Button color="inherit">Match</Button>
 							</Nav.Link>

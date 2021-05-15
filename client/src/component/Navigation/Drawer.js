@@ -92,7 +92,7 @@ function ResponsiveDrawer({
     e.preventDefault();
     axios.post('/auth/logout').then((res) => {
       if(res.data.success === true ){
-        socket.on('disconnect')
+        socket.emit('logout', res.data.id)
         Cookie.remove("login")
         window.location = "/"
       }

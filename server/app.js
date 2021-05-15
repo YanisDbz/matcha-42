@@ -1,11 +1,11 @@
 const express = require('express');
 const file = require('express-fileupload');
 const cors = require('cors');
-const bodyParser = require('body-parser');
+const {getFullDate, insertMessage} = require("./utils/utils")
+
 require('./config/db');
 require('dotenv').config()
 const cookieParser = require('cookie-parser');
-const { date } = require('faker');
 const app = express();
 const server = require("http").createServer(app);
 io = require("socket.io")(server, {
@@ -13,6 +13,7 @@ io = require("socket.io")(server, {
     origin: '*'
   }
 });
+
 
 
 /* Config */
@@ -29,17 +30,6 @@ app.use(file())
 app.use('/', require('./routes/pages'))
 app.use('/auth', require('./routes/auth'))
 
-function notifyMe() {
-  if (Notification.permission === 'granted') {
-    const notification = new Notification('Salut toi!')
-  } else if (Notification.permission !== 'denied') {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        const notification = new Notification('Salut toi!')
-      }
-    })
-  }
-}
 
 /* Server */
 const port = 8081
@@ -50,23 +40,30 @@ server.listen(port, (err) => {
   console.log(`listening on ${port}`);
 });
 
-const allUser = [];
+var users = [];
 
 io.on("connection", (socket) => {
-  const user = { socket : socket.id };
   socket.on("user_connected", (id) => {
-    user.id = id;
-    allUser[id] = user;
+      console.log("user id connect : " + id)
+      users[id] = socket.id;
    })
-  socket.on("notification", (data) => {
-     io.emit('get_notif', ({
-      for: data.for,
-      from: data.from,
-      type: data.type
-    }));
-  })
 
-  socket.on('disconnect', () => {
-    delete allUser[user.id];
+  socket.on("send-chat-message", ({ message, usersend, user_receive }) => {
+    var fullDate = getFullDate();
+
+    io.emit("chat-message", { usersend, user_receive, message, fullDate });
+    insertMessage(usersend, user_receive.iduser, message, fullDate);
+  });
+  
+  socket.on('logout', (user_id) => {
+    console.log("user id logout : " + user_id)
+    console.log("users array : " + users)
+    const index = users.indexOf(socket.id);
+    console.log("index : " + index)
+    if (index > -1) {
+      users.splice(index, 1);
+    }
+    console.log("Users array : ")
+    console.log(users)
   });
 });

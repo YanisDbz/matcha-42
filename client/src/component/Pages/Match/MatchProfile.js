@@ -21,10 +21,8 @@ import UnlikeIcon from '@material-ui/icons/ThumbDown';
 import GradeIcon from '@material-ui/icons/Grade';
 import BlockIcon from '@material-ui/icons/Block';
 import UnBlockIcon from '@material-ui/icons/LockOpen';
-import MatchIcon from '@material-ui/icons/Whatshot';
 import SendIcon from '@material-ui/icons/Send';
 import axios from 'axios'
-import socketIOClient from "socket.io-client";
 
 TimeAgo.addDefaultLocale(fr)
 
@@ -141,7 +139,6 @@ export default function MatchProfile(){
     const [matched, setMatched] = useState(false)
     const [error, setError] = useState(false)
     const classes = useStyles();
-    const socket = socketIOClient("http://localhost:8081")
 
     useEffect(() => {
         const fetchData = async () => {
@@ -180,12 +177,10 @@ export default function MatchProfile(){
         formData.append('match_id', match_id)
         axios.post('/match/like', formData).then((res) => {
           if(res.data.success === true){
-            /*  socket.emit("notification", {
-                from: user.id,
-                for: match_id,
-                type: 'like'
-              })*/
                setLike(true)
+               if(imLiked === true){
+                 setMatched(true)
+               }
           }
         })
       }

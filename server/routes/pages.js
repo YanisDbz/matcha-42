@@ -20,6 +20,9 @@ const { check } = require('express-validator');
 const forgotpwd = require('../controllers/forgotpwd')
 const matchBlock = require("../controllers/matchBlock")
 const matchUnblock = require("../controllers/matchUnBlock")
+const {notifUser, notifUserRead} = require("../controllers/NotifUser")
+const {chatContact, chatMessage} = require("../controllers/Chat")
+
 
 router.post('/activate', activateController.activate);
 router.post('/forgot-pwd', [
@@ -58,4 +61,8 @@ router.post('/sendpos', userSendPos)
 router.post('/history/like', userHistoryLike)
 router.post('/history/block', userHistoryBlock)
 router.post('/user/data', userData)
+router.post('/user/totalnotif', notifUser)
+router.post('/user/notif/read', notifUserRead)
+router.post('/chat/getcontact', chatContact)
+router.post('/chat/getmessage', chatMessage)
 module.exports = router

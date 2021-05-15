@@ -6,8 +6,7 @@ const setUserImg = (user_id, imgid, imgsrc) => {
   connection.query(`UPDATE user_image SET ${imgid} = ? where user_id = ?`,
   [imgsrc, user_id], (error, results) =>{
     if(error) {
-      console.log(error);
-      throw error
+       throw error
     } else {
        return true
     }
@@ -18,11 +17,9 @@ const updateProfilImage = (user_id, imgsrc) => {
   connection.query(`UPDATE user SET ? where id = ?`,
   [{imgprofil: imgsrc}, user_id], (error, results) => {
     if (error) {
-      console.log(error)
-      return false
+       return false
     } else {
-      console.log("Img Profil updated")
-      return true
+       return true
     }
   })
 }
@@ -31,11 +28,9 @@ const updateUserGender = (user_id, gender) => {
   connection.query('UPDATE user SET ? where id = ?', 
   [{gender: gender}, user_id], (error, results) => {
     if(error){
-      console.log(error)
-      return false
+       return false
     } else {
-      console.log("User Gender updated")
-      return true
+       return true
     }
   })
 }
@@ -44,11 +39,9 @@ const updateUserOrientation = (user_id, orientation) => {
   connection.query('UPDATE user SET ? where id = ?', 
   [{orientation: orientation}, user_id], (error, results) => {
     if(error){
-      console.log(error)
-      return false
+       return false
     } else {
-      console.log("User Orientation updated")
-      return true
+       return true
     }
   })
 }
@@ -57,8 +50,7 @@ const accountactivated = (email) => {
   connection.query("UPDATE user SET ? WHERE email = ?", 
   [{activate: 1, activate_token: null}, email], (error, results) => {
     if(error) {
-      console.log("accountacvited error" + error)
-      throw error
+       throw error
     } else {
        return true
     }
@@ -69,11 +61,9 @@ const updateSetPwdToken = (token, email) => {
   connection.query("UPDATE user SET ? WHERE email = ?",
   [{password_token: token}, email], (error, results) => {
     if(error) {
-      console.log("updatepasswordtoken error" + error)
-      throw error
+       throw error
     } else {
-      console.log("Password token updated")
-      return true
+       return true
     }
   })
 }
@@ -82,11 +72,9 @@ const setProfilData = (path_img, user_id, age, gender, orientation) => {
   connection.query("UPDATE user SET ? where id = ?", [
     {imgprofil: path_img, verify: "1", age: age, gender: gender, orientation: orientation}, user_id], (error, results) => {
     if(error){
-      console.log("set imgprofil error\n" + error);
-      return error
+       return error
     } else {
-      console.log("Imgprofil Set")
-      return true
+       return true
     }
   })
 }
@@ -96,8 +84,7 @@ const SetProfilDataUserImage = (path_img, user_id) => {
     {img1: path_img, user_id: user_id}
   ], (error, results) => {
     if(error){
-      console.log(error)
-      return error
+       return error
     } else {
       return true
     }
@@ -196,11 +183,9 @@ const checkBlock =  async (user_id, match_id) => {
 const setUserTag = (user_id, value) => {
   connection.query(`INSERT INTO user_tag(user_id, tag_id) VALUES(?, ?)`, [user_id, value], (error, results) => {
     if(error){
-      console.log(error);
-      return error
+       return error
     } else {
-      console.log("User Tag Set");
-      return true
+       return true
     }
   })
 }
@@ -210,11 +195,9 @@ const updateSetNewPassword = (password, email) => {
     connection.query("UPDATE user SET ? WHERE email = ?",
     [{password: hash, password_token: null}, email], (error, results) => {
       if(error) {
-        console.log("New Password change error" + error)
-        throw error
+         throw error
       } else {
-        console.log("Password changed success")
-        return true
+         return true
       }
     })
   });
@@ -225,11 +208,9 @@ const updateSetEditNewPassword = (password, user_id) => {
     connection.query("UPDATE user SET ? WHERE id = ?",
     [{password: hash}, user_id], (error, results) => {
       if(error) {
-        console.log("New Password change error" + error)
-        throw error
+         throw error
       } else {
-        console.log("Password changed success")
-        return true
+         return true
       }
     })
   });
@@ -297,11 +278,9 @@ const CheckPassword = (password, user_id, callback) => {
     } else {
       bcrypt.compare(password, results[0].password).then((result)=>{
         if(result){
-          console.log("good password")
-          return callback(true)
+           return callback(true)
         } else {
-          console.log("wrong")
-          return callback(false)
+           return callback(false)
         }
       })
     }
@@ -451,7 +430,36 @@ const setMatchBlock = (user_id, match_id) => {
   return promise;
  }
 
- 
+ const getTotalNotif = (id_for) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * from notification WHERE id_for = ? AND lu = 0', [id_for], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ const getNotifData = (id_for) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user JOIN notification on user.id = id_from WHERE id_for = ?', [id_for], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ const setNotifRead = (id_from) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('UPDATE notification SET ? WHERE id_for = ?', [{lu: 1}, id_from], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
  function getUserImage(user_id) {
   const promise = new Promise((resolve, reject) => {
     connection.query('SELECT * FROM user_image WHERE user_id = ?', 
@@ -469,9 +477,73 @@ const checkMatch = async (user_id, match_id) => {
   const check2 = await checkLike(match_id, user_id);
   if(check1.length === 1 && check2.length === 1){
     return true
-  }
-  return false
+  } else return false
  }
+
+ const getUserMatchListId = async (user_id) => {
+  var i = 1;
+  var id_match = []
+  while(i <= 100){
+      const result = await checkMatch(user_id, i);
+      if(result && i != user_id){
+          id_match.push(i)
+      }
+      i++;
+  }
+  return id_match
+ }
+
+ const getUserMatchData = async (user_id) => {
+   const result = await getUserMatchListId(user_id)
+   const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * from user WHERE id in (?)', [result], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+
+ }
+
+ const getMatchMessage = async (user_send, user_receive) => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query('SELECT * from messages WHERE user_send = ? AND user_receive = ? OR user_send = ? and user_receive = ? ORDER BY date', 
+    [user_send, user_receive, user_receive, user_send], (err, results) => {
+      if(err) return reject(err);
+      return resolve(results)
+    })
+  })
+  return promise;
+ }
+
+ const getFullDate = () => {
+  function addZero(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+  var dateObj = new Date();
+  var month = dateObj.getUTCMonth() + 1;
+  var day = dateObj.getUTCDate();
+  var year = dateObj.getUTCFullYear();
+  var hours = addZero(dateObj.getHours());
+  var minutes = addZero(dateObj.getUTCMinutes());
+  var seconds = addZero(dateObj.getUTCSeconds());
+  return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+};
+
+const insertMessage = (iduserSend, iduserReceive, message, date) => {
+  const promise = new Promise((resolve, reject) => {
+    const query =
+      "INSERT INTO messages SET user_send = ?, user_receive = ?, message = ?, date = ?; INSERT INTO user_notifications SET id_notif = 3, id_user_receive = ?, id_user_send = ?";
+    connection.query(query, [iduserSend, iduserReceive, message, date, iduserReceive, iduserSend], (err, result) => {
+      if (err) return reject(err);
+      return resolve(result);
+    });
+  });
+};
+
 module.exports = { 
   accountactivated, 
   updateSetPwdToken, 
@@ -507,5 +579,12 @@ module.exports = {
   setMatchUnBlock,
   getUserImage,
   setNotif,
-  checkMatch
+  getTotalNotif,
+  getNotifData,
+  setNotifRead,
+  checkMatch,
+  getUserMatchData,
+  getMatchMessage,
+  getFullDate,
+  insertMessage
 }

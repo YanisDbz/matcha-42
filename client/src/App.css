@@ -9,7 +9,48 @@ html, body, .App{
   margin: 0;
   
 }
+.header-btn {
+  width: 30px;
+  height: 30px;
+  padding: 0 !important;
+  transition: 0.7s;
+}
+.header-btn:hover {
+  color: #cda7ff!important;
+  transition: 0.2s;
+}
 
+.notif-btn .btn-primary{
+  background-color: transparent !important;
+  border: none;
+}
+.notif-btn .btn-primary:focus {
+ box-shadow: none !important;
+}
+.notif-badge {
+  position: absolute;
+  right: 68px;
+  top: 15px;
+  border-radius: 50px !important;
+  z-index: 10
+}
+
+.link-notif {
+  width: 75%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #dddddd;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+.link-notif:hover {
+  color: #d32e2e !important;
+  cursor: pointer;
+  text-decoration: underline  !important;
+}
 body{
   height: 100%;
   padding: 0;
