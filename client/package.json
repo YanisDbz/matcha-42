@@ -42,13 +42,13 @@
     "react-responsive": "^8.1.0",
     "react-responsive-cards": "^3.1.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^4.0.3",
     "react-select": "^3.1.0",
     "react-time-ago": "^6.2.0",
     "react-tinder-card": "^1.3.1",
     "react-ui-cards": "^2.0.0",
     "react-user-profile": "^1.0.3",
-    "socket.io-client": "^3.0.3",
+    "socket.io-client": "^4.1.1",
     "terra-dropdown-button": "^1.26.0"
   },
   "scripts": {

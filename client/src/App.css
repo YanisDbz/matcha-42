@@ -140,7 +140,7 @@ body{
 }
 
 .home{
-  background-image: url('/home1.jpg');
+  background-image: url('https://cdn.vox-cdn.com/thumbor/ddHdtzqBEv7cVaOGYMDoonkEj5k=/0x0:2040x1360/1200x800/filters:focal(857x517:1183x843)/cdn.vox-cdn.com/uploads/chorus_image/image/68967140/acastro_180822_1777_tinder_0002.0.jpg');
   height: 100%;
   width: 100%;
   position: absolute;

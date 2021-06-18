@@ -2,6 +2,7 @@ const express = require('express');
 const file = require('express-fileupload');
 const cors = require('cors');
 const {getFullDate, insertMessage} = require("./utils/utils")
+const jwt = require("jsonwebtoken")
 
 require('./config/db');
 require('dotenv').config()
@@ -40,30 +41,51 @@ server.listen(port, (err) => {
   console.log(`listening on ${port}`);
 });
 
-var users = [];
+const array_id = []
+
+
+const addChatid = (user_id, chat_id ) => {
+
+  const existingUser = array_id.find((user) => user.chat_id === chat_id && user.user_id === user_id);
+
+  if(existingUser) return { error: 'Username is taken.' };
+
+  const user = { user_id, chat_id };
+
+  array_id.push(user);
+
+  return { user };
+}
+
+const updateChatid = (user_id, chat_id) => {
+ const objIndex = array_id.findIndex((obj => obj.user_id == user_id));
+ const exist = array_id.find((user) => user.user_id === user_id && user.chat_id === chat_id)
+
+ if(exist) return { error: 'Username is taken.' };
+
+ array_id[objIndex].chat_id = chat_id
+}
 
 io.on("connection", (socket) => {
-  socket.on("user_connected", (id) => {
-      console.log("user id connect : " + id)
-      users[id] = socket.id;
-   })
 
-  socket.on("send-chat-message", ({ message, usersend, user_receive }) => {
-    var fullDate = getFullDate();
+  socket.on("join_room", (id) => {
+    socket.join(id)
+  })
+  socket.on("userchat", ({user_id, chat_id}) => {
+    addChatid(user_id, chat_id)
+  })
 
-    io.emit("chat-message", { usersend, user_receive, message, fullDate });
-    insertMessage(usersend, user_receive.iduser, message, fullDate);
-  });
+  socket.on("userchat_update", ({user_id, chat_id}) => {
+    updateChatid(user_id, chat_id)
+  })
   
-  socket.on('logout', (user_id) => {
-    console.log("user id logout : " + user_id)
-    console.log("users array : " + users)
-    const index = users.indexOf(socket.id);
-    console.log("index : " + index)
-    if (index > -1) {
-      users.splice(index, 1);
+  socket.on("private_message", ({user_send, user_receive, message, room_id}) => {
+    var fullDate = getFullDate();
+    const objIndex = array_id.findIndex((obj => obj.user_id == user_receive));
+
+    if((array_id[objIndex]) && (user_send === array_id[objIndex].chat_id)){
+      io.in(room_id).emit("private_message", {user_send, user_receive, message, fullDate })
     }
-    console.log("Users array : ")
-    console.log(users)
-  });
+    insertMessage(user_send, user_receive, message, fullDate)
+  })
 });

@@ -9,6 +9,7 @@ axios.defaults.baseURL = "http://localhost:8081";
 
 function App() {
 	const [user, setUser] = useState({})
+	const [match, setMatch] = useState([])
 	const cookie = Cookie.get("login")
 	const socket = socketIOClient("http://localhost:8081")
 	useEffect(() => {
@@ -18,7 +19,7 @@ function App() {
 				.then((res) => {
 					if(res.data.success === true){
 						setUser(res.data.user)
- 						socket.emit("user_connected", res.data.user_id)
+						 socket.emit("user_connected", res.data.user_id)
  					}
 				})
 			 }
@@ -29,7 +30,7 @@ function App() {
 	return (
 		<React.Fragment>
 			<div className="App">
-				    <Navigation user={user} />
+				    <Navigation user={user} match={match} />
 			</div>
 		</React.Fragment>
 		);

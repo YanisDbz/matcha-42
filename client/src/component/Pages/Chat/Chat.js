@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Col, Image, Row, Button, Form, Badge, Accordion, Card } from "react-bootstrap";
-import { PeopleFill } from 'react-bootstrap-icons'
+import socketIOClient from "socket.io-client";
 import "./Chat.css";
 import SendIcon from "@material-ui/icons/Send";
 import axios from "axios";
@@ -14,6 +14,9 @@ export default function Chat({user}){
   const [userChat, setUserChat] = useState()
   const [allMessage, setAllMessage] = useState([])
   const [message, setMessage] = useState(null)
+  const [receiver, setReceiver] = useState(null)
+  const [sender, setSender] = useState(null)
+  const socket = socketIOClient("http://localhost:8081")
 
   useEffect(() => {
     const getContact = async () => {
@@ -33,30 +36,60 @@ export default function Chat({user}){
         }
       })
     }
+    const setRoom = async () => {
+			axios.post('/chat/getcontact').then((res) => {
+				if(res.data.success === true){
+          var list = res.data.matchList
+          list.forEach(element => {
+            socket.emit("join_room", element.id + user.id)
+          });
+          var chat_id = res.data.matchList[0].id
+          var user_id = user.id
+          socket.emit("userchat", {user_id, chat_id})
+				}
+			})
+     }
+     
+    const socketMessage = async () => {
+      socket.on("private_message", message => {
+        setReceiver(message.user_receive)
+        setSender(message.user_send)
+        setAllMessage(allMessage => [...allMessage, message ]);
+      });
+    }
+    
     getContact()
+    setRoom()
+    socketMessage()
   }, [])
-
   
-
   const changeUserChat = (index) =>  {
     const formdata = new FormData()
     formdata.append('user_chat', contact[index].id)
+    var chat_id = contact[index].id
+    var user_id = user.id
     axios.post('/chat/getmessage', formdata).then((response) => {
       if(response.data.success === true){
         setAllMessage(response.data.messages)
         setUserChat(contact[index])
-        console.log(response.data)
+        setMessage("")
+        socket.emit("userchat_update", {user_id, chat_id})
       }
     })
   }
 
+  
  const sendMessage = (e) => {
     e.preventDefault();
-    if (message !== "") {
-      socket.emit("send-chat-message", { usersend, user_receive, message });
+    const user_send = user.id
+    const user_receive = userChat.id
+    const room_id = user_receive + user_send
+    if (message !== "" && message != null) {
+      //setAllMessage(allMessage => [...allMessage, message ]);
+      socket.emit('private_message', {user_send, user_receive, message, room_id});
       setMessage("");
     }
-  };
+  }
 
   const onChangeMessage = (e) => {
     setMessage(e.target.value);
@@ -112,28 +145,33 @@ export default function Chat({user}){
 
             <Row className="chat-area-text">
               <Col>
-                {allMessage.map((message, index) => (
-                  <Row key={index} style={{ marginBottom: "40px" }}>
-                    {allMessage[index].user_send !== userChat.id ? (
-                      <Image
-                        style={{ float: "left", height: "50px", width: "50px", borderRadius: "50px", color: "white", marginRight: "15px" }}
-                        src={user.imgprofil}
-                      />
-                    ) : null }
-                    <Col>
-                      <div className={allMessage[index].user_send === userChat.id ? "message-right" : "message-left"}>
-                        <div>{allMessage[index].message}</div>
-                        <div style={{ margin: "5px 0 0 0", textAlign: "end", fontSize: "12px" }}>{moment(`${allMessage[index].date}`).fromNow()}</div>
-                      </div>
-                    </Col>
+                {
+                  allMessage.map((message, index) => (
+                    <Row key={index} style={{ marginBottom: "40px" }}>
+                      {console.log(userChat.id)}
+                      {console.log("sender : " + sender)}
+                      {console.log("receiver : " + receiver)}
+                      {console.log(allMessage)}
                     {allMessage[index].user_send === userChat.id ? (
                       <Image
                         style={{ float: "right", height: "50px", width: "50px", borderRadius: "50px", color: "white", marginRight: "15px" }}
                         src={userChat.imgprofil}
                       />
                     ) : null }
+                    <Col>
+                      <div className={allMessage[index].user_send === userChat.id ? "message-left" : "message-right"}>
+                        <div>{allMessage[index].message}</div>
+                        <div style={{ margin: "5px 0 0 0", textAlign: "end", fontSize: "12px" }}>{allMessage[index].date ? moment(`${allMessage[index].date}`).fromNow() : moment(new Date()).fromNow()}</div>
+                      </div>
+                    </Col>
+                    {allMessage[index].user_send !== userChat.id ? (
+                      <Image
+                        style={{ float: "left", height: "50px", width: "50px", borderRadius: "50px", color: "white", marginRight: "15px" }}
+                        src={user.imgprofil}
+                      />
+                    ) : null }
                   </Row>
-                ))}
+                  ))}
               </Col>
             </Row>
             <Row className="chat-area-input">

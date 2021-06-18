@@ -536,8 +536,8 @@ const checkMatch = async (user_id, match_id) => {
 const insertMessage = (iduserSend, iduserReceive, message, date) => {
   const promise = new Promise((resolve, reject) => {
     const query =
-      "INSERT INTO messages SET user_send = ?, user_receive = ?, message = ?, date = ?; INSERT INTO user_notifications SET id_notif = 3, id_user_receive = ?, id_user_send = ?";
-    connection.query(query, [iduserSend, iduserReceive, message, date, iduserReceive, iduserSend], (err, result) => {
+      "INSERT INTO messages SET user_send = ?, user_receive = ?, message = ?, date = ?;";
+    connection.query(query, [iduserSend, iduserReceive, message, date], (err, result) => {
       if (err) return reject(err);
       return resolve(result);
     });
